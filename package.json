@@ -10,10 +10,19 @@
     "shots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^6.4.0",
+    "@stripe/stripe-js": "^9.6.0",
+    "@supabase/supabase-js": "^2.106.1",
+    "canvas-confetti": "^1.9.4",
+    "date-fns": "^4.3.0",
     "framer-motion": "^11.3.19",
     "lucide-react": "^0.408.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^7.15.1",
+    "recharts": "^3.8.1",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

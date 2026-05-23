@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Phone, ArrowDown } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { shop } from '../data'
 import BarberPole from './BarberPole'
 import { Star } from './Icons'
@@ -14,6 +15,7 @@ const rise = {
 }
 
 export default function Hero() {
+  const navigate = useNavigate()
   return (
     <section id="top" className="relative min-h-[100svh] overflow-hidden">
       {/* layered background */}
@@ -75,9 +77,9 @@ export default function Hero() {
             animate="show"
             className="mt-9 flex flex-wrap items-center gap-4"
           >
-            <a href="#book" className="btn-gold">
+            <button onClick={() => navigate('/book')} className="btn-gold">
               Book Your Chair
-            </a>
+            </button>
             <a href={shop.phoneHref} className="btn-ghost">
               <Phone size={16} />
               {shop.phone}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Phone } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 import { shop } from '../data'
 
 const links = [
@@ -61,9 +62,9 @@ export default function Nav() {
               <Phone size={15} />
               {shop.phone}
             </a>
-            <a href="#book" className="btn-gold text-xs">
+            <Link to="/book" className="btn-gold text-xs">
               Book a Chair
-            </a>
+            </Link>
           </div>
 
           <button

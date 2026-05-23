@@ -1,29 +1,37 @@
-import Nav from './components/Nav'
-import Hero from './components/Hero'
-import Marquee from './components/Marquee'
-import Services from './components/Services'
-import Experience from './components/Experience'
-import Process from './components/Process'
-import Testimonials from './components/Testimonials'
-import Booking from './components/Booking'
-import Visit from './components/Visit'
-import Footer from './components/Footer'
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import { useAuthStore } from './store/authStore'
+import HomePage from './pages/HomePage'
+import BookingPage from './pages/BookingPage'
+import BarberPortalPage from './pages/BarberPortalPage'
+import OwnerDashboardPage from './pages/OwnerDashboardPage'
+import EmailSmsPopup from './components/EmailSmsPopup'
 
 export default function App() {
+  const init = useAuthStore((s) => s.init)
+  useEffect(() => { init() }, [init])
+
   return (
-    <div className="grain relative">
-      <Nav />
-      <main>
-        <Hero />
-        <Marquee />
-        <Services />
-        <Experience />
-        <Process />
-        <Testimonials />
-        <Booking />
-        <Visit />
-      </main>
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <div className="grain relative">
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: '#1c1c21',
+              color: '#f4efe6',
+              border: '1px solid rgba(199,154,58,0.2)',
+            },
+          }}
+        />
+        <Routes>
+          <Route path="/" element={<><HomePage /><EmailSmsPopup /></>} />
+          <Route path="/book" element={<BookingPage />} />
+          <Route path="/barber" element={<BarberPortalPage />} />
+          <Route path="/dashboard" element={<OwnerDashboardPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   )
 }

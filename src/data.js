@@ -1,11 +1,10 @@
-// Single source of truth for site content.
-// Real shop facts (address, phone, socials) are accurate to Magic Cuts Salon, Dublin OH.
-// Service prices are sensible defaults — edit to match your current menu.
-
+// ─────────────────────────────────────────────────────────────────────────────
+// SHOP INFO — verified from magicutsalon.com / Yelp / Fresha
+// ─────────────────────────────────────────────────────────────────────────────
 export const shop = {
   name: 'Magic Cuts',
   full: 'Magic Cuts Salon',
-  tagline: 'Premium Men’s Grooming',
+  tagline: "Premium Men's Grooming",
   established: '2023',
   city: 'Dublin, Ohio',
   phone: '(614) 376-0074',
@@ -18,24 +17,60 @@ export const shop = {
   instagramHandle: '@themagic.cuts',
 }
 
-export const hours = [
-  { day: 'Monday', open: '10:00', close: '7:00' },
-  { day: 'Tuesday', open: '10:00', close: '7:00' },
-  { day: 'Wednesday', open: '10:00', close: '7:00' },
-  { day: 'Thursday', open: '10:00', close: '7:00' },
-  { day: 'Friday', open: '10:00', close: '8:00' },
-  { day: 'Saturday', open: '9:00', close: '8:00' },
-  { day: 'Sunday', open: 'Closed', close: '' },
+// ─────────────────────────────────────────────────────────────────────────────
+// BARBERS — replace [BARBER_X_NAME] with the real names from your photo files
+// Place photos at: public/barbers/barber1.jpg, barber2.jpg, barber3.jpg
+// ─────────────────────────────────────────────────────────────────────────────
+export const barbers = [
+  {
+    id: 'b1',
+    name: '[BARBER_1_NAME]',
+    title: 'Master Barber',
+    bio: 'Precision fades, clean lines, and a straight-razor finish that lasts all week.',
+    specialties: ['Skin Fades', 'Beard Sculpt', 'Classic Cut'],
+    photo: '/barbers/barber1.jpg',
+  },
+  {
+    id: 'b2',
+    name: '[BARBER_2_NAME]',
+    title: 'Senior Barber',
+    bio: 'Scissor-over-comb technique and traditional hot-towel shaves done the right way.',
+    specialties: ['Hot-Towel Shave', 'Scissor Cut', 'Beard Color'],
+    photo: '/barbers/barber2.jpg',
+  },
+  {
+    id: 'b3',
+    name: '[BARBER_3_NAME]',
+    title: 'Barber',
+    bio: 'High-contrast fades and bold styles — detail work that makes the cut.',
+    specialties: ['High Fades', 'Design Cuts', 'Kids Cuts'],
+    photo: '/barbers/barber3.jpg',
+  },
 ]
 
+// ─────────────────────────────────────────────────────────────────────────────
+// HOURS
+// ─────────────────────────────────────────────────────────────────────────────
+export const hours = [
+  { day: 'Monday',    open: '10:00', close: '7:00' },
+  { day: 'Tuesday',   open: '10:00', close: '7:00' },
+  { day: 'Wednesday', open: '10:00', close: '7:00' },
+  { day: 'Thursday',  open: '10:00', close: '7:00' },
+  { day: 'Friday',    open: '10:00', close: '8:00' },
+  { day: 'Saturday',  open: '9:00',  close: '8:00' },
+  { day: 'Sunday',    open: 'Closed', close: '' },
+]
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SERVICES — prices in USD. Deposit is $11 collected upfront via Stripe.
+// ─────────────────────────────────────────────────────────────────────────────
 export const services = [
   {
     id: 'signature',
     name: 'The Signature Cut',
     price: 35,
     duration: '45 min',
-    blurb:
-      'A full consultation, precision scissor and clipper work, hot-towel finish and a style that holds all week.',
+    blurb: 'Precision scissor and clipper work, hot-towel finish, style that holds all week.',
     tag: 'Most booked',
   },
   {
@@ -43,16 +78,14 @@ export const services = [
     name: 'Skin Fade',
     price: 40,
     duration: '50 min',
-    blurb:
-      'Bald-to-blend gradients done by eye, not by guard alone. Clean lines, sharp edge-up, no shortcuts.',
+    blurb: 'Bald-to-blend done by eye, not by guard alone. Clean lines, sharp edge-up.',
   },
   {
     id: 'cut-beard',
     name: 'Cut & Beard',
     price: 50,
     duration: '60 min',
-    blurb:
-      'The full reset. Haircut paired with a shaped, lined and conditioned beard so the whole thing reads together.',
+    blurb: 'The full reset. Haircut and beard shaped so the whole thing reads together.',
     tag: 'Best value',
   },
   {
@@ -60,55 +93,53 @@ export const services = [
     name: 'Hot-Towel Shave',
     price: 40,
     duration: '40 min',
-    blurb:
-      'Straight-razor, the old way. Steamed towels, warm lather, a close shave and a cooling finish.',
+    blurb: 'Straight-razor, the old way. Steamed towels, warm lather, a cooling finish.',
   },
   {
     id: 'beard',
     name: 'Beard Sculpt',
     price: 25,
     duration: '30 min',
-    blurb:
-      'Trim, shape and define. We build the line to your jaw and leave you with the products to keep it.',
+    blurb: 'Trim, shape and define. We build the line to your jaw.',
   },
   {
     id: 'kids',
     name: 'First Chair (8 & under)',
     price: 25,
     duration: '30 min',
-    blurb:
-      'Patient hands and a steady chair for the little ones. We make the first cuts the easy ones.',
+    blurb: 'Patient hands for the little ones. We make first cuts easy ones.',
   },
   {
     id: 'color',
     name: 'Color & Gray Blend',
     price: 45,
     duration: '45 min',
-    blurb:
-      'Custom-mixed shades and natural gray blending that looks like you, only sharper.',
+    blurb: 'Custom-mixed shades and natural gray blending that looks like you, sharper.',
   },
   {
     id: 'style',
     name: 'Wash & Style',
     price: 20,
     duration: '20 min',
-    blurb:
-      'A proper wash, blow-out and finish for an event, a shoot, or a Friday that matters.',
+    blurb: 'A proper wash, blow-out and finish for an event, shoot, or Friday that matters.',
   },
 ]
 
+// ─────────────────────────────────────────────────────────────────────────────
+// STATS, PROCESS, TESTIMONIALS
+// ─────────────────────────────────────────────────────────────────────────────
 export const stats = [
   { value: 'Est. 2023', label: 'Dublin original' },
-  { value: '8', label: 'Services on the menu' },
-  { value: '6 days', label: 'Open every week' },
-  { value: 'Walk-ins', label: 'Always welcome' },
+  { value: '8',         label: 'Services on the menu' },
+  { value: '6 days',    label: 'Open every week' },
+  { value: 'Walk-ins',  label: 'Always welcome' },
 ]
 
 export const process = [
   {
     step: '01',
     title: 'Sit & talk',
-    text: 'Every chair starts with a real consultation — your hair, your routine, what actually works for you.',
+    text: 'Every chair starts with a real consultation — your hair, your routine, what actually works.',
   },
   {
     step: '02',
@@ -123,33 +154,28 @@ export const process = [
   {
     step: '04',
     title: 'Walk out sharp',
-    text: 'You leave looking like the best version of the photo in your head — and we keep your chair open.',
+    text: 'You leave looking like the best version of the photo in your head.',
   },
 ]
 
-// Short, human testimonials. Replace with verbatim Google/Yelp reviews when you have them.
 export const testimonials = [
   {
-    quote:
-      'Best fade I’ve had in Dublin, full stop. They actually listen instead of rushing you through.',
+    quote: "Best fade I've had in Dublin, full stop. They actually listen instead of rushing you through.",
     name: 'Marcus T.',
     detail: 'Skin Fade',
   },
   {
-    quote:
-      'Took my 6-year-old for his first real haircut. They were patient, quick, and he loved it.',
+    quote: "Took my 6-year-old for his first real haircut. They were patient, quick, and he loved it.",
     name: 'Priya R.',
     detail: 'First Chair',
   },
   {
-    quote:
-      'The hot-towel shave is the most relaxed I’ve been all month. Walked out feeling brand new.',
+    quote: "The hot-towel shave is the most relaxed I've been all month. Walked out feeling brand new.",
     name: 'Devin K.',
     detail: 'Hot-Towel Shave',
   },
   {
-    quote:
-      'Clean shop, no attitude, sharp work every time. This is my spot now.',
+    quote: "Clean shop, no attitude, sharp work every time. This is my spot now.",
     name: 'Andre W.',
     detail: 'Cut & Beard',
   },
@@ -158,18 +184,22 @@ export const testimonials = [
 export const faqs = [
   {
     q: 'Do you take walk-ins?',
-    a: 'Always. Walk-ins are welcome any day we’re open — though booking a chair guarantees your time and barber.',
+    a: "Always. Walk-ins are welcome any day we're open — though booking guarantees your time and barber.",
   },
   {
-    q: 'How do I book?',
-    a: 'Use the form on this page to request a chair. We confirm by text or call, usually within the hour during shop hours.',
+    q: 'Why is there an $11 deposit?',
+    a: 'It secures your chair and goes toward the cost of your service. No-shows cost us real time — this keeps the schedule honest for everyone.',
   },
   {
-    q: 'Do you cut kids’ hair?',
+    q: "Do you cut kids' hair?",
     a: 'Yes — our First Chair service is built for ages 8 and under, with the patience that takes.',
   },
   {
     q: 'Where are you located?',
-    a: 'We’re at 2779 Martin Rd in Dublin, Ohio, with parking right out front.',
+    a: "We're at 2779 Martin Rd in Dublin, Ohio, with parking right out front.",
+  },
+  {
+    q: 'Can I pick my barber?',
+    a: 'Absolutely. When you book online you choose your barber and see their real-time availability.',
   },
 ]
