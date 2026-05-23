@@ -25,10 +25,10 @@ export default function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div
-        className={`transition-all duration-500 ${
+        className={`backdrop-blur-xl backdrop-saturate-150 transition-all duration-500 ${
           scrolled
-            ? 'border-b border-white/10 bg-onyx-950/85 backdrop-blur-xl'
-            : 'border-b border-transparent bg-transparent'
+            ? 'border-b border-white/10 bg-onyx-950/55'
+            : 'border-b border-white/[0.06] bg-white/[0.03]'
         }`}
       >
         <nav className="shell flex h-[72px] items-center justify-between">

@@ -29,11 +29,22 @@ export default function Hero() {
       {/* layered background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-onyx-950" />
+        {/* Shop interior photo */}
+        <img
+          src="/shop-interior.webp"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        {/* Darkening overlays for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950 via-onyx-950/90 to-onyx-950/55" />
+        <div className="absolute inset-0 bg-gradient-to-t from-onyx-950 via-onyx-950/30 to-onyx-950/70" />
+        {/* gold glow accent */}
         <div
-          className="absolute inset-0 opacity-[0.5]"
+          className="absolute inset-0 opacity-[0.45] mix-blend-screen"
           style={{
             background:
-              'radial-gradient(120% 90% at 80% -10%, rgba(199,154,58,0.18), transparent 55%), radial-gradient(80% 60% at 0% 100%, rgba(31,95,176,0.10), transparent 60%)',
+              'radial-gradient(120% 90% at 80% -10%, rgba(199,154,58,0.20), transparent 55%), radial-gradient(80% 60% at 0% 100%, rgba(31,95,176,0.10), transparent 60%)',
           }}
         />
       </div>
