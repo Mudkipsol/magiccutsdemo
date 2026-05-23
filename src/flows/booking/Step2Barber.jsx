@@ -3,7 +3,7 @@ import { barbers } from '../../data'
 import { useBookingStore } from '../../store/bookingStore'
 
 export default function Step2Barber() {
-  const { setBarber, setStep, service } = useBookingStore()
+  const { setBarber, setNoBarber, service } = useBookingStore()
   const selected = useBookingStore((s) => s.barber)
 
   return (
@@ -53,7 +53,7 @@ export default function Step2Barber() {
 
       <div className="mt-4">
         <button
-          onClick={() => setStep(3)}
+          onClick={() => setNoBarber()}
           className="w-full rounded-2xl border border-dashed border-white/15 py-4 text-sm text-bone/40 transition-colors hover:border-white/25 hover:text-bone/60"
         >
           No preference — surprise me

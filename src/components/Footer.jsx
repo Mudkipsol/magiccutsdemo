@@ -24,6 +24,7 @@ export default function Footer() {
               <li><a href="#services" className="hover:text-gold-300 transition-colors">Services</a></li>
               <li><a href="#experience" className="hover:text-gold-300 transition-colors">The Shop</a></li>
               <li><a href="#process" className="hover:text-gold-300 transition-colors">How It Works</a></li>
+              <li><Link to="/gallery" className="hover:text-gold-300 transition-colors">Gallery</Link></li>
               <li><Link to="/book" className="hover:text-gold-300 transition-colors">Book a Chair</Link></li>
             </ul>
           </div>
@@ -55,7 +56,11 @@ export default function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-3 py-6 text-xs text-bone/40 sm:flex-row">
           <p>© {new Date().getFullYear()} {shop.full}. All rights reserved.</p>
-          <p>Dublin, Ohio · Walk-ins welcome</p>
+          <div className="flex items-center gap-4">
+            <Link to="/privacy" className="hover:text-bone transition-colors">Privacy Policy</Link>
+            <span className="h-3 w-px bg-white/15" />
+            <Link to="/terms" className="hover:text-bone transition-colors">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>

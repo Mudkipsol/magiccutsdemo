@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
-import { Check, Calendar, Clock, Scissors, MapPin } from 'lucide-react'
+import { Check, Calendar, Clock, Scissors, MapPin, CalendarPlus, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useBookingStore } from '../../store/bookingStore'
 import { shop } from '../../data'
@@ -13,11 +13,63 @@ function to12h(t) {
   return `${h % 12 || 12}:${m.toString().padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`
 }
 
+function buildGoogleCalUrl(service, date, time) {
+  if (!service || !date || !time) return '#'
+  const [year, month, day] = date.split('-').map(Number)
+  const [h, m] = time.split(':').map(Number)
+  const durationMin = parseInt(service.duration) || 45
+  const start = new Date(year, month - 1, day, h, m)
+  const end = new Date(start.getTime() + durationMin * 60000)
+  const fmt = (d) => d.toISOString().replace(/[-:.]/g, '').slice(0, 15)
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: `Magic Cuts — ${service.name}`,
+    dates: `${fmt(start)}Z/${fmt(end)}Z`,
+    details: `${service.name} at Magic Cuts Salon. Deposit paid: $11. Need to reschedule? Call (614) 376-0074.`,
+    location: '2779 Martin Rd, Dublin, OH 43017',
+  })
+  return `https://calendar.google.com/calendar/render?${params}`
+}
+
+function downloadICS(service, date, time) {
+  if (!service || !date || !time) return
+  const [year, month, day] = date.split('-').map(Number)
+  const [h, m] = time.split(':').map(Number)
+  const durationMin = parseInt(service.duration) || 45
+  const start = new Date(year, month - 1, day, h, m)
+  const end = new Date(start.getTime() + durationMin * 60000)
+  const fmt = (d) => d.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z'
+
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Magic Cuts Salon//EN',
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    `UID:${Date.now()}@magicutsalon.com`,
+    `DTSTAMP:${fmt(new Date())}`,
+    `DTSTART:${fmt(start)}`,
+    `DTEND:${fmt(end)}`,
+    `SUMMARY:Magic Cuts — ${service.name}`,
+    `DESCRIPTION:${service.name} at Magic Cuts Salon.\\nDeposit paid: $11.\\nNeed to reschedule? Call (614) 376-0074.`,
+    'LOCATION:2779 Martin Rd\\, Dublin\\, OH 43017',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n')
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'magic-cuts-appointment.ics'
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 export default function Step6Confirm() {
   const { service, barber, date, time, contact, reset } = useBookingStore()
 
   useEffect(() => {
-    // Gold confetti burst
     const end = Date.now() + 2000
     const fire = () => {
       confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#c79a3a', '#f3e6c2', '#9c6f20'] })
@@ -53,7 +105,7 @@ export default function Step6Confirm() {
         <div className="mt-4 space-y-3">
           {[
             { icon: Scissors, label: service?.name, sub: `$${service?.price} total · $11 deposit paid` },
-            { icon: Calendar, label: date ? format(new Date(date), 'EEEE, MMMM d, yyyy') : '' },
+            { icon: Calendar, label: date ? format(new Date(date + 'T12:00:00'), 'EEEE, MMMM d, yyyy') : '' },
             { icon: Clock, label: to12h(time), sub: service?.duration },
             { icon: MapPin, label: shop.address, sub: shop.addressLine2 },
           ].map(({ icon: Icon, label, sub }) => (
@@ -70,9 +122,31 @@ export default function Step6Confirm() {
         </div>
       </div>
 
+      {/* Add to calendar */}
+      <div className="mt-5 flex gap-2">
+        <a
+          href={buildGoogleCalUrl(service, date, time)}
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-3 text-sm text-bone/70 transition-colors hover:border-gold-300/30 hover:text-bone"
+        >
+          <CalendarPlus size={15} className="text-gold-300" />
+          Google Calendar
+        </a>
+        <button
+          onClick={() => downloadICS(service, date, time)}
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-3 text-sm text-bone/70 transition-colors hover:border-gold-300/30 hover:text-bone"
+        >
+          <CalendarPlus size={15} className="text-gold-300" />
+          Apple / iCal
+        </button>
+      </div>
+
       <p className="mt-5 text-sm text-bone/50">
-        Need to reschedule? Call us at{' '}
-        <a href={shop.phoneHref} className="text-gold-300 hover:underline">{shop.phone}</a>
+        Need to reschedule?{' '}
+        <a href={shop.phoneHref} className="text-gold-300 hover:underline">
+          <Phone size={12} className="inline mb-0.5" /> {shop.phone}
+        </a>
       </p>
 
       <div className="mt-7 flex flex-col gap-3 sm:flex-row">

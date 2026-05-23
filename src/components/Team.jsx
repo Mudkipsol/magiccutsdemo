@@ -46,6 +46,7 @@ export default function Team() {
                 <img
                   src={b.photo}
                   alt={b.name}
+                  loading="lazy"
                   className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                   onError={(e) => {
                     e.target.style.display = 'none'

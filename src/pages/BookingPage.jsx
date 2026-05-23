@@ -87,6 +87,9 @@ export default function BookingPage() {
 
       {/* Step content */}
       <main className="shell max-w-3xl pb-24 pt-10">
+        <div aria-live="polite" aria-atomic="true" className="sr-only">
+          {STEP_LABELS[step - 1]} — step {step} of 6
+        </div>
         <Elements stripe={stripePromise} options={stripeOptions}>
           {step === 1 && <Step1Service />}
           {step === 2 && <Step2Barber />}

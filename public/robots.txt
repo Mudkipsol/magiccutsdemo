@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /barber
+
+Sitemap: https://www.magicutsalon.com/sitemap.xml
