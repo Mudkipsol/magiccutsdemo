@@ -33,9 +33,12 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.5, delay: (i % 2) * 0.06 }}
-              className="group flex items-start justify-between gap-6 border-b border-white/[0.07] px-4 py-7 text-left transition-colors hover:bg-onyx-900/50 rounded-xl"
+              className="group relative flex items-start justify-between gap-6 border-b border-white/[0.07] px-4 py-7 text-left transition-colors hover:bg-onyx-900/40"
             >
-              <div className="flex-1 min-w-0">
+              {/* Gold left accent — grows from top on hover */}
+              <span className="absolute left-0 top-0 h-full w-0.5 origin-top scale-y-0 rounded-full bg-gold-400 transition-transform duration-300 ease-out group-hover:scale-y-100" />
+
+              <div className="flex-1 min-w-0 pl-2">
                 <div className="flex flex-wrap items-baseline gap-2">
                   <h3 className="font-display text-xl text-bone">{s.name}</h3>
                   {s.tag && (
@@ -49,6 +52,7 @@ export default function Services() {
               </div>
               <div className="shrink-0 text-right">
                 <span className="font-display text-2xl text-gold-300">${s.price}</span>
+                <span className="ml-1 translate-x-0 text-xs text-gold-300/0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-gold-300/60">→</span>
               </div>
             </motion.button>
           ))}

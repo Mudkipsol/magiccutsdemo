@@ -39,6 +39,11 @@
   }
 }
 
+@keyframes btn-shimmer {
+  0%       { transform: translateX(-120%) skewX(-15deg); }
+  55%, 100% { transform: translateX(220%)  skewX(-15deg); }
+}
+
 @layer components {
   .shell {
     @apply mx-auto w-full max-w-shell px-6 sm:px-8 lg:px-12;
@@ -75,8 +80,20 @@
 
   .btn-gold {
     @apply btn text-onyx-950;
+    overflow: hidden;
     background: linear-gradient(135deg, #e7cd8c, #c79a3a 55%, #9c6f20);
     box-shadow: 0 14px 34px -14px rgba(199, 154, 58, 0.7);
+  }
+  .btn-gold::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    animation: btn-shimmer 4s ease-in-out infinite;
+    pointer-events: none;
   }
   .btn-gold:hover {
     transform: translateY(-2px);

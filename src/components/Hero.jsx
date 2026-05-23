@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useRef, useCallback } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Phone, ArrowDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { shop, hours } from '../data'
@@ -14,7 +15,7 @@ const rise = {
 }
 
 function getTodayHours() {
-  const day = new Date().getDay() // 0=Sun, 1=Mon…
+  const day = new Date().getDay()
   const idx = day === 0 ? 6 : day - 1
   return hours[idx]
 }
@@ -24,27 +25,63 @@ export default function Hero() {
   const today = getTodayHours()
   const isOpen = today.open !== 'Closed'
 
+  // Scroll parallax on background image
+  const { scrollY } = useScroll()
+  const imgY = useTransform(scrollY, [0, 700], ['0%', '14%'])
+
+  // Cursor spotlight — updates DOM directly (no re-renders)
+  const spotlightRef = useRef(null)
+  const handleMouseMove = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    if (spotlightRef.current) {
+      spotlightRef.current.style.background =
+        `radial-gradient(520px circle at ${x}px ${y}px, rgba(199,154,58,0.16), transparent 65%)`
+    }
+  }, [])
+
   return (
-    <section id="top" className="relative min-h-[100svh] overflow-hidden">
+    <section
+      id="top"
+      className="relative min-h-[100svh] overflow-hidden"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => spotlightRef.current && (spotlightRef.current.style.opacity = '1')}
+      onMouseLeave={() => spotlightRef.current && (spotlightRef.current.style.opacity = '0')}
+    >
       {/* layered background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-onyx-950" />
-        {/* Shop interior photo */}
-        <img
+
+        {/* Shop interior — Ken Burns slow zoom + scroll parallax */}
+        <motion.img
           src="/shop-interior.webp"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-[115%] w-full object-cover"
+          style={{ y: imgY, top: '-8%' }}
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 22, ease: 'linear' }}
         />
-        {/* Darkening overlays for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950 via-onyx-950/90 to-onyx-950/55" />
-        <div className="absolute inset-0 bg-gradient-to-t from-onyx-950 via-onyx-950/30 to-onyx-950/70" />
-        {/* gold glow accent */}
+
+        {/* Dark overlays for legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950 via-onyx-950/90 to-onyx-950/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-onyx-950 via-onyx-950/20 to-onyx-950/65" />
+
+        {/* Cursor spotlight */}
         <div
-          className="absolute inset-0 opacity-[0.45] mix-blend-screen"
+          ref={spotlightRef}
+          className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+          style={{ opacity: 0 }}
+        />
+
+        {/* Gold ambient glow */}
+        <div
+          className="absolute inset-0 opacity-[0.4] mix-blend-screen"
           style={{
             background:
-              'radial-gradient(120% 90% at 80% -10%, rgba(199,154,58,0.20), transparent 55%), radial-gradient(80% 60% at 0% 100%, rgba(31,95,176,0.10), transparent 60%)',
+              'radial-gradient(120% 90% at 80% -10%, rgba(199,154,58,0.22), transparent 55%), radial-gradient(80% 60% at 0% 100%, rgba(31,95,176,0.08), transparent 60%)',
           }}
         />
       </div>
@@ -131,7 +168,14 @@ export default function Hero() {
             transition={{ delay: 0.9, duration: 0.7 }}
             className="card absolute -bottom-2 -left-6 w-56 p-5 backdrop-blur-md"
           >
-            <p className="eyebrow text-[0.6rem]">Today at the shop</p>
+            {/* Live indicator */}
+            <div className="flex items-center gap-2">
+              <p className="eyebrow text-[0.6rem]">Today at the shop</p>
+              <span className="relative flex h-1.5 w-1.5 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-300 opacity-50" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold-300" />
+              </span>
+            </div>
             <p className="mt-2 font-display text-2xl text-bone">
               {isOpen ? `Open till ${today.close}` : 'Closed today'}
             </p>
