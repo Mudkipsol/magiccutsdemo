@@ -5,6 +5,7 @@ import { MapPin, Phone, Instagram } from 'lucide-react'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const todayIdx = (new Date().getDay() + 6) % 7 // Mon=0
 
@@ -49,33 +50,31 @@ export default function Visit() {
             </div>
           </Reveal>
 
-          {/* Map-style location card */}
+          {/* Location card */}
           <Reveal delay={0.08}>
             <a
               href={shop.mapHref}
               target="_blank"
               rel="noreferrer"
-              className="card group relative block h-full min-h-[280px] overflow-hidden p-7"
+              className="card group relative block h-full min-h-[280px] overflow-hidden"
             >
-              {/* abstract street grid */}
-              <svg className="absolute inset-0 h-full w-full opacity-20" viewBox="0 0 400 400">
-                <defs>
-                  <pattern id="streets" width="60" height="60" patternUnits="userSpaceOnUse">
-                    <path d="M0 30h60M30 0v60" stroke="rgba(199,154,58,0.5)" strokeWidth="0.7" />
-                  </pattern>
-                </defs>
-                <rect width="400" height="400" fill="url(#streets)" />
-                <path d="M0 230 Q200 200 400 250" stroke="rgba(199,154,58,0.6)" strokeWidth="2" fill="none" />
-              </svg>
-              <div className="relative flex h-full flex-col justify-between">
+              {/* Coordinate watermark — real lat/long for 2779 Martin Rd Dublin OH */}
+              <div className="absolute inset-0 flex items-center justify-center overflow-hidden select-none pointer-events-none">
+                <span
+                  className="font-mono text-5xl font-bold leading-tight text-gold-300/[0.06] rotate-[-12deg] text-center whitespace-nowrap"
+                >
+                  40.1028°N<br />83.1421°W
+                </span>
+              </div>
+              <div className="relative flex h-full flex-col justify-between p-7">
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold-300/40 bg-onyx-950 text-gold-300">
                   <MapPin size={18} />
                 </span>
                 <div>
                   <p className="font-display text-2xl text-bone">{shop.address}</p>
                   <p className="text-bone/55">{shop.addressLine2}</p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold-300 group-hover:gap-2 transition-all">
-                    Open in Maps →
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold-300 transition-all group-hover:gap-2">
+                    Open in Google Maps →
                   </span>
                 </div>
               </div>
@@ -95,7 +94,7 @@ export default function Visit() {
                     <Instagram size={16} className="text-gold-300" /> {shop.instagramHandle}
                   </a>
                 </div>
-                <a href="#book" className="btn-gold mt-6 w-full text-xs">Book a Chair</a>
+                <Link to="/book" className="btn-gold mt-6 block w-full text-center text-xs">Book a Chair</Link>
               </div>
             </div>
           </Reveal>

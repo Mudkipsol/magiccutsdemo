@@ -100,9 +100,9 @@ export default function Nav() {
                 <a href={shop.phoneHref} className="btn-ghost flex-1 text-xs">
                   <Phone size={15} /> Call
                 </a>
-                <a href="#book" onClick={() => setOpen(false)} className="btn-gold flex-1 text-xs">
+                <Link to="/book" onClick={() => setOpen(false)} className="btn-gold flex-1 text-center text-xs">
                   Book a Chair
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>

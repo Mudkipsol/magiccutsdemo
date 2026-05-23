@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { services } from '../data'
-import { serviceIcon } from './Icons'
 import SectionHead from './SectionHead'
 import Reveal from './Reveal'
 
 export default function Services() {
+  const navigate = useNavigate()
+
   return (
     <section id="services" className="relative py-24 sm:py-32">
       <div className="shell">
@@ -13,56 +15,47 @@ export default function Services() {
             eyebrow="The Menu"
             title="Every service, done"
             accent="properly."
-            intro="No upsells, no rush. Pick your service — pricing is honest and the work speaks for itself."
+            intro="Pricing is honest and up front. Pick your service, book your chair, come in ready."
           />
           <Reveal delay={0.1}>
-            <a href="#book" className="btn-ghost shrink-0">
+            <button onClick={() => navigate('/book')} className="btn-ghost shrink-0">
               Book any service →
-            </a>
+            </button>
           </Reveal>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((s, i) => {
-            const Icon = serviceIcon[s.id]
-            return (
-              <motion.a
-                key={s.id}
-                href="#book"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.5, delay: (i % 4) * 0.07 }}
-                className="group relative flex flex-col bg-onyx-900 p-7 transition-colors duration-300 hover:bg-onyx-850"
-              >
-                {s.tag && (
-                  <span className="absolute right-5 top-5 rounded-full border border-gold-300/30 bg-gold-300/10 px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-widest text-gold-200">
-                    {s.tag}
-                  </span>
-                )}
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 text-gold-300 transition-all duration-300 group-hover:border-gold-300/50 group-hover:bg-gold-300/10">
-                  {Icon && <Icon className="h-6 w-6" />}
-                </span>
-
-                <h3 className="mt-6 font-display text-xl font-medium text-bone">{s.name}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-bone/55">{s.blurb}</p>
-
-                <div className="mt-6 flex items-center justify-between border-t border-white/[0.07] pt-4">
-                  <span className="font-display text-2xl text-bone">
-                    <span className="text-gold-300">$</span>
-                    {s.price}
-                  </span>
-                  <span className="text-xs uppercase tracking-widest text-bone/40">
-                    {s.duration}
-                  </span>
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-2">
+          {services.map((s, i) => (
+            <motion.button
+              key={s.id}
+              onClick={() => navigate('/book')}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: (i % 2) * 0.06 }}
+              className="group flex items-start justify-between gap-6 border-b border-white/[0.07] px-4 py-7 text-left transition-colors hover:bg-onyx-900/50 rounded-xl"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-baseline gap-2">
+                  <h3 className="font-display text-xl text-bone">{s.name}</h3>
+                  {s.tag && (
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-widest text-gold-300/60">
+                      {s.tag}
+                    </span>
+                  )}
                 </div>
-              </motion.a>
-            )
-          })}
+                <p className="mt-1.5 text-sm leading-relaxed text-bone/50">{s.blurb}</p>
+                <p className="mt-2 text-[0.65rem] uppercase tracking-widest text-bone/30">{s.duration}</p>
+              </div>
+              <div className="shrink-0 text-right">
+                <span className="font-display text-2xl text-gold-300">${s.price}</span>
+              </div>
+            </motion.button>
+          ))}
         </div>
 
         <Reveal delay={0.1}>
-          <p className="mt-6 text-center text-sm text-bone/40">
+          <p className="mt-6 text-sm text-bone/35">
             Prices start from. Final pricing confirmed in the chair based on length and detail.
           </p>
         </Reveal>

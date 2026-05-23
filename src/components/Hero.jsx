@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion'
 import { Phone, ArrowDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { shop } from '../data'
+import { shop, hours } from '../data'
 import BarberPole from './BarberPole'
-import { Star } from './Icons'
 
 const rise = {
   hidden: { opacity: 0, y: 24 },
@@ -14,8 +13,17 @@ const rise = {
   }),
 }
 
+function getTodayHours() {
+  const day = new Date().getDay() // 0=Sun, 1=Mon…
+  const idx = day === 0 ? 6 : day - 1
+  return hours[idx]
+}
+
 export default function Hero() {
   const navigate = useNavigate()
+  const today = getTodayHours()
+  const isOpen = today.open !== 'Closed'
+
   return (
     <section id="top" className="relative min-h-[100svh] overflow-hidden">
       {/* layered background */}
@@ -26,15 +34,6 @@ export default function Hero() {
           style={{
             background:
               'radial-gradient(120% 90% at 80% -10%, rgba(199,154,58,0.18), transparent 55%), radial-gradient(80% 60% at 0% 100%, rgba(31,95,176,0.10), transparent 60%)',
-          }}
-        />
-        {/* faint grid */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
           }}
         />
       </div>
@@ -65,9 +64,9 @@ export default function Hero() {
             animate="show"
             className="mt-7 max-w-xl text-lg leading-relaxed text-bone/65"
           >
-            Magic Cuts is Dublin’s home for precision haircuts, beard work and
-            straight-razor shaves. Old-school craft, a modern finish, and a chair
-            that’s always yours.
+            Magic Cuts is Dublin's home for precision haircuts, beard work, and
+            straight-razor shaves. Every chair, every cut, every time — done the
+            right way.
           </motion.p>
 
           <motion.div
@@ -91,18 +90,22 @@ export default function Hero() {
             custom={4}
             initial="hidden"
             animate="show"
-            className="mt-10 flex items-center gap-5 text-sm text-bone/55"
+            className="mt-10 flex items-center gap-4 text-sm text-bone/50"
           >
-            <div className="flex items-center gap-1 text-gold-300">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-3.5 w-3.5" />
-              ))}
-            </div>
-            <span>Walk-ins welcome · 6 days a week</span>
+            <a
+              href={shop.mapHref}
+              target="_blank"
+              rel="noreferrer"
+              className="transition-colors hover:text-gold-300"
+            >
+              {shop.address}, Dublin OH
+            </a>
+            <span className="h-3 w-px bg-white/20" />
+            <span>Walk-ins always welcome</span>
           </motion.div>
         </div>
 
-        {/* right — pole + chair card */}
+        {/* right — pole + hours card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -118,9 +121,13 @@ export default function Hero() {
             className="card absolute -bottom-2 -left-6 w-56 p-5 backdrop-blur-md"
           >
             <p className="eyebrow text-[0.6rem]">Today at the shop</p>
-            <p className="mt-2 font-display text-2xl text-bone">Open till 7</p>
+            <p className="mt-2 font-display text-2xl text-bone">
+              {isOpen ? `Open till ${today.close}` : 'Closed today'}
+            </p>
             <p className="mt-1 text-sm text-bone/55">
-              Same-day chairs available — request below.
+              {isOpen
+                ? 'Same-day chairs available — request below.'
+                : 'Back open tomorrow — book ahead now.'}
             </p>
           </motion.div>
         </motion.div>
@@ -131,7 +138,7 @@ export default function Hero() {
         className="absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-ultra text-bone/40 transition-colors hover:text-gold-300 md:flex"
       >
         Explore
-        <ArrowDown size={16} className="animate-bounce" />
+        <ArrowDown size={16} className="opacity-60" />
       </a>
     </section>
   )

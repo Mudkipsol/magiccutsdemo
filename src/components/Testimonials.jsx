@@ -32,17 +32,23 @@ export default function Testimonials() {
               transition={{ duration: 0.6, delay: (i % 4) * 0.08 }}
               className="card flex flex-col p-7"
             >
-              <div className="flex gap-1 text-gold-300">
-                {[...Array(5)].map((_, n) => (
+              <div className="flex items-center gap-0.5 text-gold-300">
+                {[...Array(t.stars)].map((_, n) => (
                   <Star key={n} className="h-3.5 w-3.5" />
                 ))}
+                {t.stars < 5 && (
+                  <Star key="empty" className="h-3.5 w-3.5 opacity-20" />
+                )}
               </div>
               <blockquote className="mt-5 flex-1 font-display text-lg leading-snug text-bone/90">
-                “{t.quote}”
+                "{t.quote}"
               </blockquote>
               <figcaption className="mt-6 border-t border-white/[0.07] pt-4">
                 <p className="text-sm font-semibold text-bone">{t.name}</p>
-                <p className="text-xs uppercase tracking-widest text-gold-300/70">{t.detail}</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs uppercase tracking-widest text-gold-300/70">{t.detail}</p>
+                  <p className="text-[0.6rem] text-bone/25">via Google</p>
+                </div>
               </figcaption>
             </motion.figure>
           ))}

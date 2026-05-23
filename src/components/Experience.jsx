@@ -1,59 +1,55 @@
 import { motion } from 'framer-motion'
 import { stats, shop } from '../data'
 import Reveal from './Reveal'
-import { Scissors } from './Icons'
 
 export default function Experience() {
   return (
     <section id="experience" className="relative overflow-hidden py-24 sm:py-32">
       <div className="shell grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-        {/* Visual panel (no photo — crafted composition) */}
+        {/* Visual panel */}
         <Reveal className="order-2 lg:order-1">
-          <div className="relative">
-            <div className="card overflow-hidden rounded-3xl p-0">
-              <div className="relative aspect-[4/5] w-full">
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      'radial-gradient(90% 70% at 30% 20%, rgba(199,154,58,0.16), transparent 60%), linear-gradient(160deg, #16161a, #0a0a0b)',
-                  }}
-                />
-                {/* concentric arcs */}
-                <svg className="absolute inset-0 h-full w-full opacity-30" viewBox="0 0 400 500">
-                  {[60, 130, 200, 270, 340].map((r) => (
-                    <circle
-                      key={r}
-                      cx="120"
-                      cy="120"
-                      r={r}
-                      fill="none"
-                      stroke="rgba(199,154,58,0.4)"
-                      strokeWidth="0.6"
-                    />
-                  ))}
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 p-10 text-center">
-                  <motion.div
-                    initial={{ rotate: -12, opacity: 0 }}
-                    whileInView={{ rotate: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="text-gold-300"
-                  >
-                    <Scissors className="h-16 w-16" />
-                  </motion.div>
-                  <p className="font-display text-3xl italic text-bone">
-                    “Sharp work,<br /> no shortcuts.”
-                  </p>
-                  <span className="eyebrow">The house rule</span>
-                </div>
-              </div>
+          <div className="relative overflow-hidden rounded-3xl bg-onyx-950 aspect-[4/5]">
+            {/* Subtle barber-pole diagonal stripe */}
+            <div
+              className="absolute inset-0 opacity-[0.06]"
+              style={{
+                backgroundImage:
+                  'repeating-linear-gradient(48deg, #c79a3a 0 2px, transparent 2px 38px)',
+              }}
+            />
+            {/* Glow */}
+            <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-gold-500/12 blur-3xl" />
+
+            {/* Top label */}
+            <div className="absolute top-8 left-8">
+              <span className="font-sans text-[0.6rem] uppercase tracking-ultra text-gold-300/50">
+                Est. {shop.established} · {shop.city}
+              </span>
             </div>
-            {/* floating est badge */}
-            <div className="absolute -right-4 -top-4 flex h-24 w-24 flex-col items-center justify-center rounded-full border border-gold-300/30 bg-onyx-950/90 backdrop-blur">
-              <span className="font-display text-2xl text-gold-300">{shop.established}</span>
-              <span className="text-[0.55rem] uppercase tracking-ultra text-bone/50">Est.</span>
+
+            {/* Center quote */}
+            <div className="absolute inset-0 flex flex-col items-start justify-center px-10">
+              <p className="font-display text-4xl font-semibold leading-snug text-bone">
+                "Sharp work,<br />no shortcuts."
+              </p>
+              <p className="mt-4 text-sm text-bone/40">The house standard</p>
+            </div>
+
+            {/* Bottom address */}
+            <div className="absolute inset-x-0 bottom-0 border-t border-white/10 px-10 py-6">
+              <a
+                href={shop.mapHref}
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex flex-col gap-0.5"
+              >
+                <span className="font-display text-lg text-bone transition-colors group-hover:text-gold-300">
+                  {shop.address}
+                </span>
+                <span className="text-xs uppercase tracking-ultra text-bone/40">
+                  {shop.addressLine2} · Parking out front
+                </span>
+              </a>
             </div>
           </div>
         </Reveal>

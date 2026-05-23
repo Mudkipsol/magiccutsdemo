@@ -55,7 +55,7 @@ export default function Team() {
                 {/* fallback while photo loads */}
                 <div className="absolute inset-0 hidden items-center justify-center bg-onyx-800" style={{ display:'none' }}>
                   <span className="font-display text-6xl text-gold-300/40">
-                    {b.name.replace('[','').charAt(0)}
+                    {b.name.startsWith('[') ? 'MC' : b.name.charAt(0)}
                   </span>
                 </div>
                 {/* bottom gradient */}
@@ -80,7 +80,7 @@ export default function Team() {
                 </div>
 
                 <div className="mt-5 flex items-center gap-2 text-xs text-gold-300 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  Book with {b.name.split(' ')[0]} →
+                  {b.name.startsWith('[') ? 'Book this barber →' : `Book with ${b.name.split(' ')[0]} →`}
                 </div>
               </div>
             </motion.div>

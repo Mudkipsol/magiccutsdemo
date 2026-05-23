@@ -160,24 +160,28 @@ export const process = [
 
 export const testimonials = [
   {
-    quote: "Best fade I've had in Dublin, full stop. They actually listen instead of rushing you through.",
+    quote: "Best fade I've had in Dublin, full stop. They actually listen to what you want instead of guessing.",
     name: 'Marcus T.',
     detail: 'Skin Fade',
+    stars: 5,
   },
   {
-    quote: "Took my 6-year-old for his first real haircut. They were patient, quick, and he loved it.",
+    quote: "Took my 6-year-old for his first real cut. They were patient, quick, and he sat still the whole time.",
     name: 'Priya R.',
     detail: 'First Chair',
+    stars: 5,
   },
   {
-    quote: "The hot-towel shave is the most relaxed I've been all month. Walked out feeling brand new.",
+    quote: "Hot-towel shave on a Friday afternoon. Came in wound up, left like a different person. Genuinely great.",
     name: 'Devin K.',
     detail: 'Hot-Towel Shave',
+    stars: 4,
   },
   {
-    quote: "Clean shop, no attitude, sharp work every time. This is my spot now.",
+    quote: "Sharp cuts, fair price, nobody trying to upsell you on product. I drive past three other barbers to get here.",
     name: 'Andre W.',
     detail: 'Cut & Beard',
+    stars: 5,
   },
 ]
 
