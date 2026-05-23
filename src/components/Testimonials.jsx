@@ -47,7 +47,14 @@ export default function Testimonials() {
                 <p className="text-sm font-semibold text-bone">{t.name}</p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs uppercase tracking-widest text-gold-300/70">{t.detail}</p>
-                  <p className="text-[0.6rem] text-bone/25">via Google</p>
+                  <a
+                    href={shop.googleReviews}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[0.6rem] text-bone/25 transition-colors hover:text-bone/60"
+                  >
+                    via Google
+                  </a>
                 </div>
               </figcaption>
             </motion.figure>

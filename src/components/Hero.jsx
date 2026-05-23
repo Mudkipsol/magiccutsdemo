@@ -58,6 +58,10 @@ export default function Hero() {
           src="/shop-interior.webp"
           alt=""
           aria-hidden="true"
+          fetchpriority="high"
+          decoding="async"
+          width={1920}
+          height={1280}
           className="absolute inset-0 h-[115%] w-full object-cover"
           style={{ y: imgY, top: '-8%' }}
           initial={{ scale: 1.08 }}
@@ -177,7 +181,7 @@ export default function Hero() {
               </span>
             </div>
             <p className="mt-2 font-display text-2xl text-bone">
-              {isOpen ? `Open till ${today.close}` : 'Closed today'}
+              {isOpen ? `Open till ${today.close} PM` : 'Closed today'}
             </p>
             <p className="mt-1 text-sm text-bone/55">
               {isOpen

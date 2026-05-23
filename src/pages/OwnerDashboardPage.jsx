@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { format, subDays, parseISO } from 'date-fns'
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
@@ -469,9 +469,14 @@ function MarketingTab({ contacts }) {
     if (!subject || !message) { toast.error('Subject and message required'); return }
     setBusy(true)
     try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error('Not signed in')
       const res = await fetch('/.netlify/functions/send-marketing', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ subject, message, type }),
       })
       if (!res.ok) throw new Error('Send failed')

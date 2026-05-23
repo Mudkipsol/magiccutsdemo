@@ -20,7 +20,7 @@ function buildGoogleCalUrl(service, date, time) {
   const durationMin = parseInt(service.duration) || 45
   const start = new Date(year, month - 1, day, h, m)
   const end = new Date(start.getTime() + durationMin * 60000)
-  const fmt = (d) => d.toISOString().replace(/[-:.]/g, '').slice(0, 15)
+  const fmt = (d) => d.toISOString().replace(/[^0-9TZ]/g, '').slice(0, 15)
   const params = new URLSearchParams({
     action: 'TEMPLATE',
     text: `Magic Cuts — ${service.name}`,
@@ -38,7 +38,7 @@ function downloadICS(service, date, time) {
   const durationMin = parseInt(service.duration) || 45
   const start = new Date(year, month - 1, day, h, m)
   const end = new Date(start.getTime() + durationMin * 60000)
-  const fmt = (d) => d.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z'
+  const fmt = (d) => d.toISOString().replace(/[^0-9TZ]/g, '').slice(0, 15) + 'Z'
 
   const ics = [
     'BEGIN:VCALENDAR',

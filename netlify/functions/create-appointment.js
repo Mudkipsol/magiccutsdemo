@@ -36,6 +36,8 @@ function stripHtml(str) {
   return String(str).replace(/<[^>]*>/g, '').slice(0, 1000)
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 export default async (req) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 })
 
@@ -73,11 +75,15 @@ export default async (req) => {
   const safeTime = escHtml(appointment_time)
   const safePrice = parseInt(service_price) || 0
 
+  // Only store a valid UUID barber_id; anything else (e.g. "any") becomes null
+  // so the foreign-key constraint can't reject the whole booking.
+  const safeBarberId = barber_id && UUID_RE.test(barber_id) ? barber_id : null
+
   // Insert appointment
   const { data, error } = await supabase
     .from('appointments')
     .insert({
-      barber_id: barber_id || null,
+      barber_id: safeBarberId,
       service_name: stripHtml(service_name),
       service_price: safePrice,
       customer_name: stripHtml(customer_name),
@@ -95,7 +101,8 @@ export default async (req) => {
 
   if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })
 
-  const manageUrl = `${process.env.SITE_URL || 'https://www.magicutsalon.com'}/?appt=${data.id}`
+  const siteUrl = process.env.SITE_URL || 'https://www.magicutsalon.com'
+  const manageUrl = `${siteUrl}/manage?id=${data.id}`
   const shopAddress = '2779 Martin Rd, Dublin OH 43017'
   const shopPhone = '(614) 376-0074'
 
@@ -117,7 +124,10 @@ export default async (req) => {
             <tr><td style="color:#9a958c;padding:6px 0;font-size:14px">Deposit paid</td><td style="color:#c79a3a;font-size:14px">$11 ✓</td></tr>
             <tr><td style="color:#9a958c;padding:6px 0;font-size:14px">Balance due</td><td style="color:#f4efe6;font-size:14px">$${safePrice - 11} at the shop</td></tr>
           </table>
-          <div style="margin-top:28px;background:#16161a;border-radius:12px;padding:18px;border:1px solid rgba(199,154,58,0.15)">
+          <div style="margin-top:28px;text-align:center">
+            <a href="${manageUrl}" style="display:inline-block;background:#c79a3a;color:#0a0a0b;text-decoration:none;font-weight:600;padding:12px 28px;border-radius:10px;font-size:14px">View / manage my booking</a>
+          </div>
+          <div style="margin-top:24px;background:#16161a;border-radius:12px;padding:18px;border:1px solid rgba(199,154,58,0.15)">
             <p style="color:#9a958c;font-size:13px;margin:0 0 10px 0">Need to reschedule or cancel?</p>
             <p style="margin:0;font-size:14px">
               Call us: <a href="tel:+16143760074" style="color:#c79a3a">${shopPhone}</a>
@@ -127,12 +137,40 @@ export default async (req) => {
           </div>
           <p style="color:#34343d;font-size:11px;margin-top:40px">
             Magic Cuts Salon · 2779 Martin Rd · Dublin, OH 43017<br>
-            <a href="${process.env.SITE_URL || 'https://www.magicutsalon.com'}/unsubscribe?email=${encodeURIComponent(customer_email)}&type=email" style="color:#555">Unsubscribe from marketing emails</a>
+            <a href="${siteUrl}/unsubscribe?email=${encodeURIComponent(customer_email)}&type=email" style="color:#555">Unsubscribe from marketing emails</a>
           </p>
         </div>
       `,
     })
-  } catch (e) { console.error('Email failed:', e.message) }
+  } catch (e) { console.error('Customer email failed:', e.message) }
+
+  // Notify the shop owner of the new booking
+  try {
+    if (process.env.SHOP_EMAIL) {
+      await resend.emails.send({
+        from: `Magic Cuts Bookings <${process.env.SHOP_EMAIL}>`,
+        to: process.env.SHOP_EMAIL,
+        replyTo: customer_email,
+        subject: `New booking — ${safeService} · ${safeDate} ${safeTime}`,
+        html: `
+          <div style="font-family:system-ui,Arial,sans-serif;max-width:560px;margin:0 auto;padding:28px;border:1px solid #eee;border-radius:12px">
+            <h2 style="margin:0 0 4px 0">New appointment booked</h2>
+            <p style="color:#666;margin:0 0 20px 0">Deposit of $11 paid via Stripe.</p>
+            <table style="width:100%;border-collapse:collapse;font-size:14px">
+              <tr><td style="color:#888;padding:6px 0">Customer</td><td><strong>${safeName}</strong></td></tr>
+              <tr><td style="color:#888;padding:6px 0">Service</td><td>${safeService} ($${safePrice})</td></tr>
+              <tr><td style="color:#888;padding:6px 0">Date</td><td>${safeDate}</td></tr>
+              <tr><td style="color:#888;padding:6px 0">Time</td><td>${safeTime}</td></tr>
+              <tr><td style="color:#888;padding:6px 0">Phone</td><td>${escHtml(customer_phone)}</td></tr>
+              <tr><td style="color:#888;padding:6px 0">Email</td><td>${escHtml(customer_email)}</td></tr>
+              ${safeNotes ? `<tr><td style="color:#888;padding:6px 0;vertical-align:top">Notes</td><td>${safeNotes}</td></tr>` : ''}
+            </table>
+            <p style="margin-top:20px"><a href="${siteUrl}/dashboard" style="color:#c79a3a">Open dashboard →</a></p>
+          </div>
+        `,
+      })
+    }
+  } catch (e) { console.error('Owner email failed:', e.message) }
 
   // Send SMS confirmation via Twilio
   try {

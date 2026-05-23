@@ -13,17 +13,21 @@ export const shop = {
   address: '2779 Martin Rd',
   addressLine2: 'Dublin, OH 43017',
   mapHref: 'https://maps.google.com/?q=2779+Martin+Rd+Dublin+OH+43017',
+  googleReviews: 'https://www.google.com/maps/search/?api=1&query=Magic+Cuts+Salon+Dublin+OH',
   instagram: 'https://www.instagram.com/themagic.cuts/',
   instagramHandle: '@themagic.cuts',
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// BARBERS — replace [BARBER_X_NAME] with the real names from your photo files
-// Place photos at: public/barbers/barber1.jpg, barber2.jpg, barber3.jpg
+// BARBERS
+// IDs are fixed UUIDs that MUST match the seeded rows in
+// supabase/migrations/002_improvements.sql. They are stored on
+// appointments.barber_id (a UUID FK), so changing one here means changing
+// both places, or barber bookings will fail the foreign-key constraint.
 // ─────────────────────────────────────────────────────────────────────────────
 export const barbers = [
   {
-    id: 'b1',
+    id: '11111111-1111-4111-8111-111111111111',
     name: 'Bashaar',
     title: 'Lead Barber',
     bio: 'Precision fades, clean lines, and a straight-razor finish that holds all week. Bashaar sets the standard in the shop.',
@@ -31,7 +35,7 @@ export const barbers = [
     photo: '/barbers/barber1.jpg',
   },
   {
-    id: 'b2',
+    id: '22222222-2222-4222-8222-222222222222',
     name: 'Alejandro',
     title: 'Senior Barber',
     bio: 'Detail work that goes beyond the cut — beard shaping, edge-ups, and fades built to your face.',
@@ -39,7 +43,7 @@ export const barbers = [
     photo: '/barbers/barber2.jpg',
   },
   {
-    id: 'b3',
+    id: '33333333-3333-4333-8333-333333333333',
     name: 'Bebo',
     title: 'Barber',
     bio: 'High fades, bold designs, and the kind of energy that makes the chair feel like yours.',

@@ -51,6 +51,8 @@ export default function Experience() {
             <img
               src="/shop-group.jpg"
               alt="The Magic Cuts team inside the shop"
+              loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover object-top"
               onError={(e) => {
                 e.target.style.display = 'none'

@@ -29,6 +29,16 @@ export default function BookingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Keep the browser back gesture inside the wizard: mid-flow, "back" steps
+  // backward instead of abandoning the page (and any in-progress payment).
+  useEffect(() => {
+    if (step <= 1 || step >= 6) return
+    window.history.pushState({ wizardStep: step }, '')
+    const onPop = () => setStep(step - 1)
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [step, setStep])
+
   const stripeOptions = {
     appearance: {
       theme: 'night',

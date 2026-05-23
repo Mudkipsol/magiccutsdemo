@@ -8,6 +8,24 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_appts_slot_unique
   ON appointments (barber_id, appointment_date, appointment_time)
   WHERE status NOT IN ('cancelled', 'no_show');
 
+-- ─── Track post-visit review SMS ──────────────────────────────────────────────
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS review_sms_sent BOOLEAN DEFAULT false;
+
+-- ─── Re-seed barbers with stable UUIDs that match src/data.js ─────────────────
+-- The frontend stores these exact IDs on appointments.barber_id. Migration 001
+-- seeded random UUIDs with placeholder names; replace them with the real roster.
+DELETE FROM barbers;
+INSERT INTO barbers (id, name, title, photo_url, bio, specialties, display_order) VALUES
+  ('11111111-1111-4111-8111-111111111111', 'Bashaar', 'Lead Barber', '/barbers/barber1.jpg',
+   'Precision fades, clean lines, and a straight-razor finish that holds all week.',
+   ARRAY['Skin Fades','Straight-Razor','Classic Cut'], 1),
+  ('22222222-2222-4222-8222-222222222222', 'Alejandro', 'Senior Barber', '/barbers/barber2.jpg',
+   'Detail work that goes beyond the cut — beard shaping, edge-ups, and fades built to your face.',
+   ARRAY['Beard Sculpt','Edge-Up','Skin Fades'], 2),
+  ('33333333-3333-4333-8333-333333333333', 'Bebo', 'Barber', '/barbers/barber3.jpg',
+   'High fades, bold designs, and the kind of energy that makes the chair feel like yours.',
+   ARRAY['High Fades','Design Cuts','Kids Cuts'], 3);
+
 -- ─── Shop settings (editable from dashboard) ─────────────────────────────────
 CREATE TABLE IF NOT EXISTS shop_settings (
   key        TEXT PRIMARY KEY,
