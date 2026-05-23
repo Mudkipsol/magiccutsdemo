@@ -6,51 +6,45 @@ export default function Experience() {
   return (
     <section id="experience" className="relative overflow-hidden py-24 sm:py-32">
       <div className="shell grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-        {/* Visual panel */}
+        {/* Visual panel — shop photo */}
         <Reveal className="order-2 lg:order-1">
           <div className="relative overflow-hidden rounded-3xl bg-onyx-950 aspect-[4/5]">
-            {/* Subtle barber-pole diagonal stripe */}
-            <div
-              className="absolute inset-0 opacity-[0.06]"
-              style={{
-                backgroundImage:
-                  'repeating-linear-gradient(48deg, #c79a3a 0 2px, transparent 2px 38px)',
-              }}
+            <img
+              src="/shop-group.jpg"
+              alt="The Magic Cuts team inside the shop"
+              className="h-full w-full object-cover object-top"
+              onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex' }}
             />
-            {/* Glow */}
-            <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-gold-500/12 blur-3xl" />
-
-            {/* Top label */}
-            <div className="absolute top-8 left-8">
-              <span className="font-sans text-[0.6rem] uppercase tracking-ultra text-gold-300/50">
-                Est. {shop.established} · {shop.city}
-              </span>
-            </div>
-
-            {/* Center quote */}
-            <div className="absolute inset-0 flex flex-col items-start justify-center px-10">
-              <p className="font-display text-4xl font-semibold leading-snug text-bone">
-                "Sharp work,<br />no shortcuts."
-              </p>
-              <p className="mt-4 text-sm text-bone/40">The house standard</p>
-            </div>
-
-            {/* Bottom address */}
-            <div className="absolute inset-x-0 bottom-0 border-t border-white/10 px-10 py-6">
-              <a
-                href={shop.mapHref}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex flex-col gap-0.5"
-              >
-                <span className="font-display text-lg text-bone transition-colors group-hover:text-gold-300">
-                  {shop.address}
+            {/* Fallback editorial panel shown only if photo is missing */}
+            <div className="absolute inset-0 hidden flex-col justify-between" style={{ display: 'none' }}>
+              <div
+                className="absolute inset-0 opacity-[0.06]"
+                style={{
+                  backgroundImage:
+                    'repeating-linear-gradient(48deg, #c79a3a 0 2px, transparent 2px 38px)',
+                }}
+              />
+              <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-gold-500/12 blur-3xl" />
+              <div className="absolute top-8 left-8">
+                <span className="font-sans text-[0.6rem] uppercase tracking-ultra text-gold-300/50">
+                  Est. {shop.established} · {shop.city}
                 </span>
-                <span className="text-xs uppercase tracking-ultra text-bone/40">
-                  {shop.addressLine2} · Parking out front
-                </span>
-              </a>
+              </div>
+              <div className="absolute inset-0 flex flex-col items-start justify-center px-10">
+                <p className="font-display text-4xl font-semibold leading-snug text-bone">
+                  "Sharp work,<br />no shortcuts."
+                </p>
+                <p className="mt-4 text-sm text-bone/40">The house standard</p>
+              </div>
+              <div className="absolute inset-x-0 bottom-0 border-t border-white/10 px-10 py-6">
+                <a href={shop.mapHref} target="_blank" rel="noreferrer" className="group inline-flex flex-col gap-0.5">
+                  <span className="font-display text-lg text-bone transition-colors group-hover:text-gold-300">{shop.address}</span>
+                  <span className="text-xs uppercase tracking-ultra text-bone/40">{shop.addressLine2} · Parking out front</span>
+                </a>
+              </div>
             </div>
+            {/* Gradient overlay on the real photo */}
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-onyx-950/60 to-transparent pointer-events-none" />
           </div>
         </Reveal>
 
