@@ -44,18 +44,18 @@ export const barbers = [
   },
   {
     id: '33333333-3333-4333-8333-333333333333',
-    name: 'Bebo',
-    title: 'Master Barber',
-    bio: 'Sharp fades, clean lines, and the kind of precision that keeps clients coming back every time.',
-    specialties: ['Skin Fades', 'Beard Sculpt', 'Classic Cut'],
-    photo: '/barbers/barber3.jpg',
-  },
-  {
-    id: '44444444-4444-4444-8444-444444444444',
     name: 'Luis',
     title: 'Barber',
     bio: 'High fades, bold designs, and the kind of energy that makes the chair feel like yours.',
     specialties: ['High Fades', 'Design Cuts', 'Kids Cuts'],
+    photo: '/barbers/barber3.jpg',
+  },
+  {
+    id: '44444444-4444-4444-8444-444444444444',
+    name: 'Bebo',
+    title: 'Master Barber',
+    bio: 'Sharp fades, clean lines, and the kind of precision that keeps clients coming back every time.',
+    specialties: ['Skin Fades', 'Beard Sculpt', 'Classic Cut'],
     photo: '/barbers/barber4.jpg',
   },
 ]
