@@ -173,7 +173,7 @@ SELECT
   CASE WHEN avg_cadence_days IS NOT NULL THEN last_visit + avg_cadence_days::int ELSE NULL END,
   CASE
     WHEN visit_count <= 1 THEN 'new'
-    WHEN last_visit >= current_date - GREATEST(coalesce(avg_cadence_days,30) * 1.5, 35) THEN 'active'
+    WHEN last_visit >= current_date - GREATEST(coalesce(avg_cadence_days,30) * 1.5, 35)::int THEN 'active'
     WHEN last_visit >= current_date - 90 THEN 'lapsing'
     ELSE 'lapsed'
   END
