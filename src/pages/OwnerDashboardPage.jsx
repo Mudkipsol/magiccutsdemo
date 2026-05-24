@@ -5,7 +5,7 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContai
 import {
   LogOut, Users, DollarSign, Calendar, TrendingUp, Scissors, Phone, Mail,
   Search, Download, Send, BarChart2, CheckCircle, XCircle, AlertCircle,
-  RefreshCw, Save, Settings, UserPlus, KeyRound,
+  RefreshCw, Save, Settings, UserPlus, KeyRound, Plus, Upload,
 } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { supabase } from '../lib/supabase'
@@ -550,23 +550,38 @@ function BarbersTab({ appointments }) {
   const [editing, setEditing] = useState(null) // barber id being edited
   const [saving, setSaving] = useState(false)
 
+  const mapRow = (b) => ({
+    id: b.id,
+    name: b.name,
+    title: b.title,
+    bio: b.bio || '',
+    specialties: b.specialties || [],
+    photo: b.photo_url || `/barbers/${b.id}.jpg`,
+  })
+
   // Try to load from Supabase
-  useEffect(() => {
+  const loadBarbers = useCallback(() => {
     if (!supabase) return
     supabase.from('barbers').select('*').order('display_order').then(({ data }) => {
-      if (data && data.length) {
-        // Map Supabase barbers to match UI shape
-        setBarbers(data.map((b) => ({
-          id: b.id,
-          name: b.name,
-          title: b.title,
-          bio: b.bio || '',
-          specialties: b.specialties || [],
-          photo: b.photo_url || `/barbers/${b.id}.jpg`,
-        })))
-      }
+      if (data && data.length) setBarbers(data.map(mapRow))
     })
   }, [])
+
+  useEffect(() => { loadBarbers() }, [loadBarbers])
+
+  const addBarber = async () => {
+    if (!supabase) { toast.error('Connect Supabase to add barbers'); return }
+    const order = barbers.length + 1
+    const { data, error } = await supabase
+      .from('barbers')
+      .insert({ name: 'New Barber', title: 'Barber', display_order: order })
+      .select()
+      .single()
+    if (error || !data) { toast.error('Could not add barber'); return }
+    setBarbers((prev) => [...prev, mapRow(data)])
+    setEditing(data.id)
+    toast.success('Barber added — edit their details')
+  }
 
   const byBarber = {}
   appointments.forEach((a) => {
@@ -585,9 +600,11 @@ function BarbersTab({ appointments }) {
   const saveBarber = async (barber, updates) => {
     setSaving(true)
     if (supabase) {
+      const row = { name: updates.name, title: updates.title, bio: updates.bio, specialties: updates.specialties }
+      if (updates.photo) row.photo_url = updates.photo
       const { error } = await supabase
         .from('barbers')
-        .update({ name: updates.name, title: updates.title, bio: updates.bio, specialties: updates.specialties })
+        .update(row)
         .eq('id', barber.id)
       if (error) { toast.error('Save failed'); setSaving(false); return }
     }
@@ -613,6 +630,13 @@ function BarbersTab({ appointments }) {
         </ResponsiveContainer>
       </div>
 
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-semibold text-bone">Roster</p>
+        <button onClick={addBarber} className="btn-ghost py-2 text-xs">
+          <Plus size={13} /> Add barber
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {barbers.map((b) => (
           <BarberCard
@@ -632,12 +656,37 @@ function BarbersTab({ appointments }) {
 }
 
 function BarberCard({ barber, stats, isEditing, saving, onEdit, onCancel, onSave }) {
-  const [form, setForm] = useState({ name: barber.name, title: barber.title, bio: barber.bio, specialties: barber.specialties?.join(', ') || '' })
+  const [form, setForm] = useState({ name: barber.name, title: barber.title, bio: barber.bio, specialties: barber.specialties?.join(', ') || '', photo: barber.photo })
+  const [uploading, setUploading] = useState(false)
+
+  const uploadPhoto = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!supabase) { toast.error('Connect Supabase to upload photos'); return }
+    setUploading(true)
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase()
+    const path = `${barber.id}-${Date.now()}.${ext}`
+    const { error } = await supabase.storage
+      .from('barber-photos')
+      .upload(path, file, { upsert: true, cacheControl: '3600' })
+    if (error) { toast.error('Upload failed'); setUploading(false); return }
+    const { data } = supabase.storage.from('barber-photos').getPublicUrl(path)
+    setForm((f) => ({ ...f, photo: data.publicUrl }))
+    setUploading(false)
+    toast.success('Photo uploaded — save to apply')
+  }
 
   if (isEditing) {
     return (
       <div className="card p-5 space-y-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-bone/40">Editing {barber.name.split(' ')[0]}</p>
+        <div className="flex items-center gap-3">
+          <img src={form.photo} alt="" className="h-14 w-14 rounded-xl object-cover" onError={(e) => { e.currentTarget.style.visibility = 'hidden' }} />
+          <label className="btn-ghost cursor-pointer py-2 text-xs">
+            <Upload size={12} /> {uploading ? 'Uploading…' : 'Upload photo'}
+            <input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} disabled={uploading} />
+          </label>
+        </div>
         <input className="input text-sm" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Name" />
         <input className="input text-sm" value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="Title" />
         <textarea className="input resize-none text-sm" rows={3} value={form.bio} onChange={(e) => setForm((f) => ({ ...f, bio: e.target.value }))} placeholder="Bio" />
@@ -645,7 +694,7 @@ function BarberCard({ barber, stats, isEditing, saving, onEdit, onCancel, onSave
         <div className="flex gap-2">
           <button onClick={onCancel} className="btn-ghost flex-1 text-xs py-2">Cancel</button>
           <button
-            disabled={saving}
+            disabled={saving || uploading}
             onClick={() => onSave({ ...form, specialties: form.specialties.split(',').map((s) => s.trim()).filter(Boolean) })}
             className="btn-gold flex-1 text-xs py-2"
           >
@@ -659,9 +708,12 @@ function BarberCard({ barber, stats, isEditing, saving, onEdit, onCancel, onSave
   return (
     <div className="card p-5">
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="font-display text-lg text-bone">{barber.name}</p>
-          <p className="text-xs text-bone/50">{barber.title}</p>
+        <div className="flex items-center gap-3">
+          <img src={barber.photo} alt="" className="h-11 w-11 rounded-xl object-cover" onError={(e) => { e.currentTarget.style.visibility = 'hidden' }} />
+          <div>
+            <p className="font-display text-lg text-bone">{barber.name}</p>
+            <p className="text-xs text-bone/50">{barber.title}</p>
+          </div>
         </div>
         <button onClick={onEdit} className="text-xs text-bone/30 hover:text-bone">Edit</button>
       </div>

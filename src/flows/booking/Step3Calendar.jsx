@@ -22,13 +22,31 @@ function to12h(t) {
   return `${h12}:${m.toString().padStart(2, '0')} ${ampm}`
 }
 
+// Monday-first index for a JS date (getDay: 0=Sun … 6=Sat)
+const mondayIdx = (date) => (getDay(date) + 6) % 7
+
 export default function Step3Calendar() {
   const { barber, setDateTime } = useBookingStore()
   const [month, setMonth] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedTime, setSelectedTime] = useState(null)
   const [bookedSlots, setBookedSlots] = useState([])
+  const [schedule, setSchedule] = useState(null) // barber's weekly hours, or null = shop default
   const [loading, setLoading] = useState(false)
+
+  // Load the selected barber's weekly schedule
+  useEffect(() => {
+    if (!barber || !supabase) { setSchedule(null); return }
+    supabase
+      .from('barbers')
+      .select('schedule')
+      .eq('id', barber.id)
+      .single()
+      .then(({ data }) => {
+        const s = data?.schedule
+        setSchedule(Array.isArray(s) && s.length === 7 ? s : null)
+      })
+  }, [barber])
 
   // Fetch booked slots when date changes
   useEffect(() => {
@@ -59,8 +77,24 @@ export default function Step3Calendar() {
   const startPad = getDay(monthStart) // 0=Sun
   const cells = [...Array(startPad).fill(null), ...days]
 
-  const isDisabled = (day) =>
-    isBefore(day, today) || CLOSED_DAYS.includes(getDay(day))
+  // Which days/hours a barber works. Falls back to shop default (closed Sundays).
+  const dayEntry = (day) => (schedule ? schedule[mondayIdx(day)] : null)
+
+  const isDisabled = (day) => {
+    if (isBefore(day, today)) return true
+    const entry = dayEntry(day)
+    if (entry) return !entry.working
+    return CLOSED_DAYS.includes(getDay(day))
+  }
+
+  // Slots offered for the selected date, bounded by the barber's hours.
+  const daySlots = (() => {
+    if (!selectedDate) return ALL_SLOTS
+    const entry = dayEntry(selectedDate)
+    if (!entry) return ALL_SLOTS
+    if (!entry.working) return []
+    return ALL_SLOTS.filter((t) => t >= entry.open && t < entry.close)
+  })()
 
   const confirm = () => {
     if (selectedDate && selectedTime) {
@@ -68,7 +102,7 @@ export default function Step3Calendar() {
     }
   }
 
-  const availableSlots = ALL_SLOTS.filter((s) => !bookedSlots.includes(s))
+  const availableSlots = daySlots.filter((s) => !bookedSlots.includes(s))
 
   return (
     <div>
@@ -151,7 +185,12 @@ export default function Step3Calendar() {
                 <p className="mt-4 text-sm text-bone/40">Loading…</p>
               ) : (
                 <div className="mt-4 grid grid-cols-2 gap-1.5 lg:grid-cols-1">
-                  {ALL_SLOTS.map((t) => {
+                  {daySlots.length === 0 && (
+                    <p className="col-span-2 text-sm text-bone/40 lg:col-span-1">
+                      {barber?.name || 'This barber'} isn't working this day.
+                    </p>
+                  )}
+                  {daySlots.map((t) => {
                     const booked = bookedSlots.includes(t)
                     const active = selectedTime === t
                     return (
