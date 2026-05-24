@@ -13,6 +13,7 @@ import PrivacyPage from './pages/PrivacyPage'
 import TermsPage from './pages/TermsPage'
 import UnsubscribePage from './pages/UnsubscribePage'
 import ManageBookingPage from './pages/ManageBookingPage'
+import AccountPage from './pages/AccountPage'
 import NotFoundPage from './pages/NotFoundPage'
 import EmailSmsPopup from './components/EmailSmsPopup'
 
@@ -60,6 +61,9 @@ function AppInner() {
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/unsubscribe" element={<UnsubscribePage />} />
             <Route path="/manage" element={<ManageBookingPage />} />
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/login" element={<AccountPage />} />
+            <Route path="/register" element={<AccountPage />} />
             <Route path="/barber" element={<BarberPortalPage />} />
             <Route path="/dashboard" element={<OwnerDashboardPage />} />
             <Route path="*" element={<NotFoundPage />} />

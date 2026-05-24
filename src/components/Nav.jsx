@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Phone } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Menu, X, Phone, LayoutDashboard, CalendarClock, User } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { shop } from '../data'
+import { useAuthStore } from '../store/authStore'
 
 const links = [
   { href: '#services', label: 'Services' },
@@ -11,9 +12,20 @@ const links = [
   { href: '#visit', label: 'Visit' },
 ]
 
+// Resolve the account entry point from the current auth state.
+function useAccountLink() {
+  const { session, profile, loading } = useAuthStore()
+  if (loading) return null
+  if (session && profile?.role === 'owner') return { to: '/dashboard', label: 'Owner Dashboard', icon: LayoutDashboard, prominent: true }
+  if (session && profile?.role === 'barber') return { to: '/barber', label: 'My Schedule', icon: CalendarClock }
+  if (session) return { to: '/account', label: 'My Account', icon: User }
+  return { to: '/account', label: 'Sign in', icon: User }
+}
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const account = useAccountLink()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -58,6 +70,25 @@ export default function Nav() {
           </div>
 
           <div className="hidden items-center gap-3 lg:flex">
+            {account && (
+              account.prominent ? (
+                <Link
+                  to={account.to}
+                  className="flex items-center gap-2 rounded-full border border-gold-300/40 bg-gold-300/10 px-4 py-2 text-xs font-semibold text-gold-200 transition-colors hover:bg-gold-300/20"
+                >
+                  <account.icon size={15} />
+                  {account.label}
+                </Link>
+              ) : (
+                <Link
+                  to={account.to}
+                  className="flex items-center gap-1.5 text-sm font-medium text-bone/70 transition-colors hover:text-bone"
+                >
+                  <account.icon size={15} />
+                  {account.label}
+                </Link>
+              )
+            )}
             <a href={shop.phoneHref} className="btn-ghost text-xs">
               <Phone size={15} />
               {shop.phone}
@@ -96,6 +127,15 @@ export default function Nav() {
                   {l.label}
                 </a>
               ))}
+              {account && (
+                <Link
+                  to={account.to}
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center gap-2 rounded-lg px-3 py-3 text-base font-medium ${account.prominent ? 'text-gold-200' : 'text-bone/80'} hover:bg-white/5 hover:text-bone`}
+                >
+                  <account.icon size={17} /> {account.label}
+                </Link>
+              )}
               <div className="mt-3 flex gap-3">
                 <a href={shop.phoneHref} className="btn-ghost flex-1 text-xs">
                   <Phone size={15} /> Call

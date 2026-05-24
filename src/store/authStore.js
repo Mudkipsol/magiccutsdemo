@@ -39,6 +39,18 @@ export const useAuthStore = create((set) => ({
     return error
   },
 
+  // Customer self-registration. Staff (owner/barber) are created by the owner,
+  // never through this path. Returns { error, needsConfirm }.
+  signUp: async (email, password, name) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: name } },
+    })
+    // When email confirmation is enabled, Supabase returns a user but no session.
+    return { error, needsConfirm: !error && !data.session }
+  },
+
   signOut: async () => {
     await supabase?.auth.signOut()
     set({ session: null, profile: null })

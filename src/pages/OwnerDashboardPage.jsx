@@ -5,7 +5,7 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContai
 import {
   LogOut, Users, DollarSign, Calendar, TrendingUp, Scissors, Phone, Mail,
   Search, Download, Send, BarChart2, CheckCircle, XCircle, AlertCircle,
-  RefreshCw, Save, Settings,
+  RefreshCw, Save, Settings, UserPlus, KeyRound,
 } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { supabase } from '../lib/supabase'
@@ -678,6 +678,71 @@ function BarberCard({ barber, stats, isEditing, saving, onEdit, onCancel, onSave
         ))}
       </div>
       {barber.bio && <p className="mt-3 text-xs leading-relaxed text-bone/50">{barber.bio}</p>}
+      <BarberLoginCreator barber={barber} />
+    </div>
+  )
+}
+
+// Owner generates the barber's portal login here — barbers never self-register.
+function BarberLoginCreator({ barber }) {
+  const [open, setOpen] = useState(false)
+  const [email, setEmail] = useState('')
+  const [pw, setPw] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [done, setDone] = useState(false)
+
+  const create = async () => {
+    if (!email || pw.length < 8) { toast.error('Email and an 8+ char password required'); return }
+    if (!supabase) { toast.error('Connect Supabase to create logins'); return }
+    setBusy(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error('Not signed in')
+      const res = await fetch('/api/create-staff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify({ email, password: pw, barber_id: barber.id, role: 'barber' }),
+      })
+      const body = await res.json()
+      if (!res.ok) throw new Error(body.error || 'Could not create login')
+      toast.success(`Login created for ${barber.name.split(' ')[0]}`)
+      setDone(true)
+      setOpen(false)
+      setEmail(''); setPw('')
+    } catch (e) { toast.error(e.message) }
+    setBusy(false)
+  }
+
+  if (done) {
+    return (
+      <p className="mt-4 flex items-center gap-1.5 border-t border-white/[0.06] pt-3 text-xs text-green-400">
+        <CheckCircle size={12} /> Portal login created — share the credentials securely.
+      </p>
+    )
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="mt-4 flex w-full items-center justify-center gap-1.5 border-t border-white/[0.06] pt-3 text-xs text-bone/40 hover:text-gold-300"
+      >
+        <UserPlus size={12} /> Create portal login
+      </button>
+    )
+  }
+
+  return (
+    <div className="mt-4 space-y-2 border-t border-white/[0.06] pt-3">
+      <p className="flex items-center gap-1.5 text-[0.6rem] font-semibold uppercase tracking-wide text-bone/40">
+        <KeyRound size={11} /> New barber login
+      </p>
+      <input className="input text-sm" type="email" placeholder="barber@magicutsalon.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input className="input text-sm" type="text" placeholder="Temporary password (8+ chars)" value={pw} onChange={(e) => setPw(e.target.value)} />
+      <div className="flex gap-2">
+        <button onClick={() => { setOpen(false); setEmail(''); setPw('') }} className="btn-ghost flex-1 py-2 text-xs">Cancel</button>
+        <button onClick={create} disabled={busy} className="btn-gold flex-1 py-2 text-xs">{busy ? 'Creating…' : 'Create'}</button>
+      </div>
     </div>
   )
 }

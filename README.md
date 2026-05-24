@@ -93,11 +93,29 @@ but compared against server UTC, so the window is intentionally wide.
 | `/` | Home (hero, services, team, gallery teaser, FAQ) |
 | `/book` | 6-step booking wizard |
 | `/manage?id=…` | Customer view of a single booking |
+| `/account` | Customer login / register + "my bookings" (`/login`, `/register` alias) |
 | `/gallery` | Photo gallery |
 | `/privacy`, `/terms`, `/unsubscribe` | Legal / compliance |
 | `/dashboard` | Owner command station (auth required) |
 | `/barber` | Barber portal (auth required) |
 | `*` | 404 |
+
+## Accounts & roles
+
+There are two kinds of accounts, both backed by Supabase Auth:
+
+- **Customers** self-register at `/account`. They have *no* `user_profiles`
+  row — a customer is simply an authenticated user. They can read only their
+  own appointments (matched on the email of their login; see migration 003).
+- **Staff** (owner + barber) never self-register. The owner creates barber
+  logins from the dashboard **Barbers** tab → "Create portal login", which
+  calls `netlify/functions/create-staff.js` (service-role: creates the auth
+  user and the `user_profiles` row in one step). Create the first owner
+  manually via the SQL above.
+
+The site header reflects the signed-in role: owners get a prominent
+**Owner Dashboard** button, barbers get **My Schedule**, customers get
+**My Account**, and signed-out visitors get **Sign in**.
 
 ## Known follow-ups
 
