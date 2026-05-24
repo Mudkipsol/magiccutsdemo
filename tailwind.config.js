@@ -45,10 +45,6 @@ export default {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
-        pole: {
-          '0%': { backgroundPosition: '0 0' },
-          '100%': { backgroundPosition: '0 -56px' },
-        },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
@@ -56,7 +52,6 @@ export default {
       },
       animation: {
         marquee: 'marquee 32s linear infinite',
-        pole: 'pole 1.1s linear infinite',
         shimmer: 'shimmer 6s linear infinite',
       },
     },

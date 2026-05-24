@@ -1,9 +1,7 @@
-import { useRef, useCallback } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Phone, ArrowDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { shop, hours } from '../data'
-import BarberPole from './BarberPole'
 
 const rise = {
   hidden: { opacity: 0, y: 24 },
@@ -29,26 +27,8 @@ export default function Hero() {
   const { scrollY } = useScroll()
   const imgY = useTransform(scrollY, [0, 700], ['0%', '14%'])
 
-  // Cursor spotlight — updates DOM directly (no re-renders)
-  const spotlightRef = useRef(null)
-  const handleMouseMove = useCallback((e) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    if (spotlightRef.current) {
-      spotlightRef.current.style.background =
-        `radial-gradient(520px circle at ${x}px ${y}px, rgba(199,154,58,0.16), transparent 65%)`
-    }
-  }, [])
-
   return (
-    <section
-      id="top"
-      className="relative min-h-[100svh] overflow-hidden"
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => spotlightRef.current && (spotlightRef.current.style.opacity = '1')}
-      onMouseLeave={() => spotlightRef.current && (spotlightRef.current.style.opacity = '0')}
-    >
+    <section id="top" className="relative min-h-[100svh] overflow-hidden">
       {/* layered background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-onyx-950" />
@@ -69,29 +49,21 @@ export default function Hero() {
           transition={{ duration: 22, ease: 'linear' }}
         />
 
-        {/* Dark overlays for legibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950 via-onyx-950/90 to-onyx-950/50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-onyx-950 via-onyx-950/20 to-onyx-950/65" />
-
-        {/* Cursor spotlight */}
-        <div
-          ref={spotlightRef}
-          className="absolute inset-0 pointer-events-none transition-opacity duration-500"
-          style={{ opacity: 0 }}
-        />
+        {/* Legibility gradients — anchor text on the left, let the photo breathe right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950 via-onyx-950/80 to-onyx-950/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-onyx-950/55" />
 
         {/* Gold ambient glow */}
         <div
-          className="absolute inset-0 opacity-[0.4] mix-blend-screen"
+          className="absolute inset-0 opacity-[0.35] mix-blend-screen"
           style={{
             background:
-              'radial-gradient(120% 90% at 80% -10%, rgba(199,154,58,0.22), transparent 55%), radial-gradient(80% 60% at 0% 100%, rgba(31,95,176,0.08), transparent 60%)',
+              'radial-gradient(110% 80% at 85% -10%, rgba(199,154,58,0.18), transparent 55%), radial-gradient(80% 60% at 0% 100%, rgba(31,95,176,0.07), transparent 60%)',
           }}
         />
       </div>
 
-      <div className="shell grid min-h-[100svh] grid-cols-1 items-center gap-12 pt-28 pb-16 lg:grid-cols-[1.15fr_0.85fr]">
-        {/* left */}
+      <div className="shell flex min-h-[100svh] items-center pt-28 pb-20">
         <div className="max-w-2xl">
           <motion.p variants={rise} initial="hidden" animate="show" className="eyebrow">
             <span className="h-px w-8 bg-gold-300/60" />
@@ -137,13 +109,24 @@ export default function Hero() {
             </a>
           </motion.div>
 
+          {/* Live status — the one dynamic detail worth surfacing, kept inline */}
           <motion.div
             variants={rise}
             custom={4}
             initial="hidden"
             animate="show"
-            className="mt-10 flex items-center gap-4 text-sm text-bone/50"
+            className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-bone/55"
           >
+            <span className="flex items-center gap-2 text-bone/75">
+              <span className="relative flex h-1.5 w-1.5 shrink-0">
+                {isOpen && (
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-300 opacity-50" />
+                )}
+                <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${isOpen ? 'bg-gold-300' : 'bg-bone/30'}`} />
+              </span>
+              {isOpen ? `Open till ${today.close} PM` : 'Closed today'}
+            </span>
+            <span className="h-3 w-px bg-white/20" />
             <a
               href={shop.mapHref}
               target="_blank"
@@ -156,40 +139,6 @@ export default function Hero() {
             <span>Walk-ins always welcome</span>
           </motion.div>
         </div>
-
-        {/* right — pole + hours card */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden justify-center lg:flex"
-        >
-          <div className="absolute -inset-10 -z-10 rounded-[3rem] bg-gradient-to-b from-gold-500/10 to-transparent blur-2xl" />
-          <BarberPole />
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.7 }}
-            className="card absolute -bottom-2 -left-6 w-56 p-5 backdrop-blur-md"
-          >
-            {/* Live indicator */}
-            <div className="flex items-center gap-2">
-              <p className="eyebrow text-[0.6rem]">Today at the shop</p>
-              <span className="relative flex h-1.5 w-1.5 shrink-0">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-300 opacity-50" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold-300" />
-              </span>
-            </div>
-            <p className="mt-2 font-display text-2xl text-bone">
-              {isOpen ? `Open till ${today.close} PM` : 'Closed today'}
-            </p>
-            <p className="mt-1 text-sm text-bone/55">
-              {isOpen
-                ? 'Same-day chairs available — request below.'
-                : 'Back open tomorrow — book ahead now.'}
-            </p>
-          </motion.div>
-        </motion.div>
       </div>
 
       <a
