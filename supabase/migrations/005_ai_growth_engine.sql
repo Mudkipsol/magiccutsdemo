@@ -186,3 +186,7 @@ SET customer_id = c.id
 FROM customers c
 WHERE c.phone = normalize_phone(a.customer_phone)
   AND a.customer_id IS NULL;
+
+-- ─── Reminder tracking columns on appointments (Phase 1 cron agents) ──────────
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS reminder_48h_sent BOOLEAN DEFAULT false;
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS reminder_2h_sent  BOOLEAN DEFAULT false;

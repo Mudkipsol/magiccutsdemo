@@ -6,6 +6,8 @@ import {
   LogOut, Users, DollarSign, Calendar, TrendingUp, Scissors, Phone, Mail,
   Search, Download, Send, BarChart2, CheckCircle, XCircle, AlertCircle,
   RefreshCw, Save, Settings, UserPlus, KeyRound, Plus, Upload,
+  Bot, MessageSquare, Zap, Activity, SlidersHorizontal, ThumbsUp, ThumbsDown,
+  Power, Inbox, Clock,
 } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { supabase } from '../lib/supabase'
@@ -14,7 +16,7 @@ import { Sparkle } from '../components/Icons'
 import { Link } from 'react-router-dom'
 import { barbers as staticBarbers, hours as staticHours, services as staticServices } from '../data'
 
-const TABS = ['Overview', 'Appointments', 'Customers', 'Marketing', 'Barbers', 'Settings']
+const TABS = ['Overview', 'Appointments', 'Customers', 'Marketing', 'Barbers', 'Growth', 'Settings']
 
 export default function OwnerDashboardPage() {
   const { session, profile, signIn, signOut, loading } = useAuthStore()
@@ -142,7 +144,9 @@ function CommandStation({ signOut }) {
               onClick={() => setTab(t)}
               className={`shrink-0 px-4 py-3 text-sm font-medium transition-colors ${tab === t ? 'border-b-2 border-gold-300 text-gold-300' : 'text-bone/50 hover:text-bone'}`}
             >
-              {t === 'Settings' ? <span className="flex items-center gap-1"><Settings size={13} />{t}</span> : t}
+              {t === 'Settings' ? <span className="flex items-center gap-1"><Settings size={13} />{t}</span>
+                : t === 'Growth' ? <span className="flex items-center gap-1"><Bot size={13} />{t}</span>
+                : t}
             </button>
           ))}
         </div>
@@ -170,6 +174,7 @@ function CommandStation({ signOut }) {
             {tab === 'Customers' && <CustomersTab appointments={appointments} />}
             {tab === 'Marketing' && <MarketingTab contacts={contacts} />}
             {tab === 'Barbers' && <BarbersTab appointments={appointments} />}
+            {tab === 'Growth' && <GrowthTab />}
             {tab === 'Settings' && <SettingsTab />}
           </>
         )}
@@ -916,6 +921,382 @@ function SettingsTab() {
           ))}
         </div>
       </div>
+    </div>
+  )
+}
+
+// ─── Growth Tab (AI Growth Engine) ───────────────────────────────────────────
+function GrowthTab() {
+  const [sub, setSub] = useState('queue')
+  const SUBS = [
+    { id: 'queue', label: 'Approval Queue', icon: Inbox },
+    { id: 'inbox', label: 'Conversations', icon: MessageSquare },
+    { id: 'log', label: 'Agent Log', icon: Activity },
+    { id: 'settings', label: 'AI Settings', icon: SlidersHorizontal },
+  ]
+  return (
+    <div>
+      <div className="mb-6 flex items-center gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold-300/10">
+          <Bot size={18} className="text-gold-300" />
+        </div>
+        <div>
+          <p className="font-display text-xl text-bone">AI Growth Engine</p>
+          <p className="text-xs text-bone/40">Automated rebooking, reminders, and receptionist</p>
+        </div>
+      </div>
+      <div className="mb-6 flex gap-1 border-b border-white/10 pb-px">
+        {SUBS.map(({ id, label, icon: Icon }) => (
+          <button key={id} onClick={() => setSub(id)} className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors ${sub === id ? 'border-b-2 border-gold-300 text-gold-300' : 'text-bone/50 hover:text-bone'}`}>
+            <Icon size={13} />{label}
+          </button>
+        ))}
+      </div>
+      {sub === 'queue' && <ApprovalQueue />}
+      {sub === 'inbox' && <ConversationInbox />}
+      {sub === 'log' && <AgentLog />}
+      {sub === 'settings' && <AgentSettings />}
+    </div>
+  )
+}
+
+function ApprovalQueue() {
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [busy, setBusy] = useState(null)
+  const { session } = useAuthStore()
+
+  const load = async () => {
+    if (!supabase) { setLoading(false); return }
+    setLoading(true)
+    const { data } = await supabase
+      .from('agent_actions')
+      .select('id, agent, action, payload, created_at, customer_id, customers(name, phone, email)')
+      .eq('status', 'queued')
+      .order('created_at', { ascending: false })
+      .limit(50)
+    setItems(data || [])
+    setLoading(false)
+  }
+
+  useEffect(() => { load() }, [])
+
+  const decide = async (id, decision) => {
+    if (!session) return
+    setBusy(id)
+    try {
+      const res = await fetch('/api/approve-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify({ action_id: id, decision }),
+      })
+      const json = await res.json()
+      if (json.ok || decision === 'skip') {
+        toast.success(decision === 'approve' ? 'Message sent!' : 'Skipped')
+        setItems((prev) => prev.filter((a) => a.id !== id))
+      } else {
+        toast.error(json.error || 'Failed')
+      }
+    } catch {
+      toast.error('Network error')
+    }
+    setBusy(null)
+  }
+
+  if (loading) return <p className="py-12 text-center text-bone/40">Loading…</p>
+  if (!items.length) return (
+    <div className="py-16 text-center">
+      <CheckCircle size={32} className="mx-auto mb-3 text-green-400/50" />
+      <p className="text-bone/40">Queue is clear — no pending messages.</p>
+    </div>
+  )
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-bone/50">{items.length} message{items.length !== 1 ? 's' : ''} awaiting approval</p>
+        <button
+          onClick={async () => {
+            if (!confirm(`Send all ${items.length} queued messages?`)) return
+            for (const item of items) await decide(item.id, 'approve')
+          }}
+          className="btn-gold text-xs py-2"
+        >
+          <Zap size={12} /> Approve All
+        </button>
+      </div>
+      {items.map((item) => {
+        const cust = item.customers
+        const ch = item.payload?.channel || 'sms'
+        return (
+          <div key={item.id} className="card p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="rounded-full bg-gold-300/10 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-gold-300">{item.agent}</span>
+                  <span className="text-[0.65rem] text-bone/30">{ch.toUpperCase()}</span>
+                </div>
+                <p className="text-sm text-bone/80 font-medium">{cust?.name || 'Unknown customer'}</p>
+                <p className="text-xs text-bone/40">{ch === 'sms' ? cust?.phone : cust?.email}</p>
+                <p className="mt-2 rounded-lg bg-onyx-800/60 p-3 text-sm text-bone/70 whitespace-pre-wrap">{item.payload?.body || '—'}</p>
+                <p className="mt-1.5 text-[0.65rem] text-bone/25">{new Date(item.created_at).toLocaleString()}</p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button
+                  disabled={busy === item.id}
+                  onClick={() => decide(item.id, 'approve')}
+                  className="flex items-center gap-1 rounded-xl bg-green-500/15 px-3 py-2 text-xs font-medium text-green-400 hover:bg-green-500/25 disabled:opacity-40"
+                >
+                  <ThumbsUp size={12} /> Send
+                </button>
+                <button
+                  disabled={busy === item.id}
+                  onClick={() => decide(item.id, 'skip')}
+                  className="flex items-center gap-1 rounded-xl bg-white/5 px-3 py-2 text-xs font-medium text-bone/40 hover:text-bone disabled:opacity-40"
+                >
+                  <ThumbsDown size={12} /> Skip
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function ConversationInbox() {
+  const [convos, setConvos] = useState([])
+  const [selected, setSelected] = useState(null)
+  const [messages, setMessages] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!supabase) { setLoading(false); return }
+    supabase
+      .from('conversations')
+      .select('id, channel, status, created_at, customers(name, phone, email)')
+      .order('created_at', { ascending: false })
+      .limit(30)
+      .then(({ data }) => { setConvos(data || []); setLoading(false) })
+  }, [])
+
+  const openThread = async (convo) => {
+    setSelected(convo)
+    const { data } = await supabase
+      .from('messages')
+      .select('direction, body, sender, created_at')
+      .eq('conversation_id', convo.id)
+      .order('created_at', { ascending: true })
+      .limit(50)
+    setMessages(data || [])
+  }
+
+  if (loading) return <p className="py-12 text-center text-bone/40">Loading…</p>
+
+  if (selected) {
+    return (
+      <div>
+        <button onClick={() => setSelected(null)} className="mb-4 text-xs text-bone/40 hover:text-bone">← All conversations</button>
+        <p className="mb-1 font-display text-lg text-bone">{selected.customers?.name || selected.customers?.phone || 'Unknown'}</p>
+        <p className="mb-5 text-xs text-bone/40">{selected.channel.toUpperCase()} · {selected.status}</p>
+        <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
+          {messages.map((m, i) => (
+            <div key={i} className={`flex ${m.direction === 'out' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${m.direction === 'out' ? 'bg-gold-300/15 text-bone' : 'bg-onyx-800 text-bone/80'}`}>
+                {m.body}
+                <p className="mt-1 text-[0.6rem] text-bone/30">{m.sender} · {new Date(m.created_at).toLocaleTimeString()}</p>
+              </div>
+            </div>
+          ))}
+          {!messages.length && <p className="text-center text-bone/30 py-8">No messages yet</p>}
+        </div>
+      </div>
+    )
+  }
+
+  if (!convos.length) return (
+    <div className="py-16 text-center">
+      <MessageSquare size={32} className="mx-auto mb-3 text-bone/20" />
+      <p className="text-bone/40">No conversations yet. They'll appear here when customers text or chat.</p>
+    </div>
+  )
+
+  return (
+    <div className="space-y-2">
+      {convos.map((c) => (
+        <button key={c.id} onClick={() => openThread(c)} className="card w-full p-4 text-left hover:border-gold-300/20 transition-colors">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-bone">{c.customers?.name || c.customers?.phone || 'Unknown'}</p>
+              <p className="text-xs text-bone/40">{c.channel.toUpperCase()} · {new Date(c.created_at).toLocaleDateString()}</p>
+            </div>
+            <span className={`rounded-full px-2 py-0.5 text-[0.6rem] font-semibold uppercase ${c.status === 'needs_human' ? 'bg-amber-400/15 text-amber-400' : c.status === 'closed' ? 'bg-white/5 text-bone/30' : 'bg-green-400/10 text-green-400'}`}>
+              {c.status}
+            </span>
+          </div>
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function AgentLog() {
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!supabase) { setLoading(false); return }
+    supabase
+      .from('agent_actions')
+      .select('id, agent, action, status, reason, created_at, customers(name)')
+      .order('created_at', { ascending: false })
+      .limit(100)
+      .then(({ data }) => { setItems(data || []); setLoading(false) })
+  }, [])
+
+  const statusColor = (s) => ({
+    auto_sent: 'text-green-400', sent: 'text-green-400', queued: 'text-gold-300',
+    approved: 'text-blue-400', skipped: 'text-bone/30', failed: 'text-red-400',
+  }[s] || 'text-bone/40')
+
+  if (loading) return <p className="py-12 text-center text-bone/40">Loading…</p>
+  if (!items.length) return <p className="py-12 text-center text-bone/40">No agent activity yet.</p>
+
+  return (
+    <div className="card divide-y divide-white/[0.04] overflow-hidden">
+      {items.map((item) => (
+        <div key={item.id} className="flex items-center gap-4 px-5 py-3">
+          <span className="shrink-0 rounded-full bg-gold-300/10 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wide text-gold-300">{item.agent}</span>
+          <span className="flex-1 text-sm text-bone/70">{item.action}{item.customers?.name ? ` → ${item.customers.name}` : ''}</span>
+          <span className={`text-xs font-medium ${statusColor(item.status)}`}>{item.status}</span>
+          <span className="shrink-0 text-[0.6rem] text-bone/25">{new Date(item.created_at).toLocaleString()}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function AgentSettings() {
+  const [settings, setSettings] = useState({
+    ai_kill_switch: false,
+    ai_autonomy: { transactional: 'auto', marketing: 'approval' },
+    ai_quiet_hours: { start: '09:00', end: '20:00', tz: 'America/New_York' },
+    ai_frequency_caps: { per_customer_per_week: 2, global_per_day: 200 },
+  })
+  const [loaded, setLoaded] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    if (!supabase) return
+    const keys = ['ai_kill_switch', 'ai_autonomy', 'ai_quiet_hours', 'ai_frequency_caps']
+    supabase.from('shop_settings').select('key, value').in('key', keys).then(({ data }) => {
+      if (!data) return
+      const map = Object.fromEntries(data.map((r) => [r.key, r.value]))
+      setSettings((s) => ({ ...s, ...map }))
+      setLoaded(true)
+    })
+  }, [])
+
+  const save = async () => {
+    if (!supabase) return
+    setSaving(true)
+    const entries = Object.entries(settings)
+    for (const [key, value] of entries) {
+      await supabase.from('shop_settings').upsert({ key, value }, { onConflict: 'key' })
+    }
+    toast.success('AI settings saved')
+    setSaving(false)
+  }
+
+  const update = (key, value) => setSettings((s) => ({ ...s, [key]: value }))
+  const s = settings
+
+  return (
+    <div className="max-w-lg space-y-8">
+      {/* Kill switch */}
+      <div className="card p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-display text-base text-bone">Kill Switch</p>
+            <p className="text-xs text-bone/40 mt-0.5">Immediately pause all agent-initiated outbound messages.</p>
+          </div>
+          <button
+            onClick={() => update('ai_kill_switch', !s.ai_kill_switch)}
+            className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${s.ai_kill_switch ? 'bg-red-500/20 text-red-400' : 'bg-green-500/15 text-green-400'}`}
+          >
+            <Power size={18} />
+          </button>
+        </div>
+        {s.ai_kill_switch && (
+          <p className="mt-3 rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400">
+            ⚠ Kill switch is ON — all AI outbound is paused.
+          </p>
+        )}
+      </div>
+
+      {/* Autonomy */}
+      <div className="card p-5 space-y-4">
+        <p className="font-display text-base text-bone">Autonomy Mode</p>
+        {[
+          { key: 'transactional', label: 'Transactional', hint: 'Reminders, confirmations, review requests' },
+          { key: 'marketing', label: 'Marketing', hint: 'Rebooking nudges, win-back, promos' },
+        ].map(({ key, label, hint }) => (
+          <div key={key}>
+            <p className="text-sm text-bone/70">{label}</p>
+            <p className="text-xs text-bone/35 mb-1.5">{hint}</p>
+            <div className="flex gap-2">
+              {['auto', 'approval'].map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => update('ai_autonomy', { ...s.ai_autonomy, [key]: mode })}
+                  className={`rounded-xl px-4 py-2 text-sm font-medium transition-all ${s.ai_autonomy?.[key] === mode ? 'bg-gold-300 text-onyx-950' : 'border border-white/10 text-bone/50 hover:text-bone'}`}
+                >
+                  {mode === 'auto' ? 'Auto-send' : 'Needs approval'}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quiet hours */}
+      <div className="card p-5 space-y-3">
+        <p className="font-display text-base text-bone">Quiet Hours</p>
+        <p className="text-xs text-bone/40">Marketing messages are only sent within these hours.</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <p className="text-xs text-bone/40 mb-1">From</p>
+            <input type="time" value={s.ai_quiet_hours?.start || '09:00'} onChange={(e) => update('ai_quiet_hours', { ...s.ai_quiet_hours, start: e.target.value })} className="input py-1.5 text-sm w-32" />
+          </div>
+          <span className="text-bone/30 mt-4">to</span>
+          <div>
+            <p className="text-xs text-bone/40 mb-1">Until</p>
+            <input type="time" value={s.ai_quiet_hours?.end || '20:00'} onChange={(e) => update('ai_quiet_hours', { ...s.ai_quiet_hours, end: e.target.value })} className="input py-1.5 text-sm w-32" />
+          </div>
+        </div>
+      </div>
+
+      {/* Frequency caps */}
+      <div className="card p-5 space-y-4">
+        <p className="font-display text-base text-bone">Frequency Caps</p>
+        <div>
+          <p className="text-sm text-bone/70 mb-1">Per customer per week</p>
+          <input type="number" min={1} max={10} value={s.ai_frequency_caps?.per_customer_per_week || 2} onChange={(e) => update('ai_frequency_caps', { ...s.ai_frequency_caps, per_customer_per_week: parseInt(e.target.value) || 2 })} className="input w-24 py-1.5 text-sm" />
+        </div>
+        <div>
+          <p className="text-sm text-bone/70 mb-1">Global messages per day</p>
+          <input type="number" min={1} max={2000} value={s.ai_frequency_caps?.global_per_day || 200} onChange={(e) => update('ai_frequency_caps', { ...s.ai_frequency_caps, global_per_day: parseInt(e.target.value) || 200 })} className="input w-24 py-1.5 text-sm" />
+        </div>
+      </div>
+
+      <button onClick={save} disabled={saving} className="btn-gold w-full">
+        <Save size={14} /> {saving ? 'Saving…' : 'Save AI Settings'}
+      </button>
+
+      {!loaded && supabase && (
+        <p className="text-xs text-bone/30">⚠ Run migration 005 to enable AI settings persistence.</p>
+      )}
     </div>
   )
 }
