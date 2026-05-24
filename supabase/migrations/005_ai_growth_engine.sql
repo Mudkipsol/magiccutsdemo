@@ -170,7 +170,7 @@ INSERT INTO customers (phone, email, name, first_visit, last_visit, visit_count,
                        lifetime_value, avg_cadence_days, predicted_next_visit, lifecycle_status)
 SELECT
   phone, email, name, first_visit, last_visit, visit_count, lifetime_value, avg_cadence_days,
-  CASE WHEN avg_cadence_days IS NOT NULL THEN last_visit + avg_cadence_days ELSE NULL END,
+  CASE WHEN avg_cadence_days IS NOT NULL THEN last_visit + avg_cadence_days::int ELSE NULL END,
   CASE
     WHEN visit_count <= 1 THEN 'new'
     WHEN last_visit >= current_date - GREATEST(coalesce(avg_cadence_days,30) * 1.5, 35) THEN 'active'
