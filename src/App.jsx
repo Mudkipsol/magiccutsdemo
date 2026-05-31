@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { motion, AnimatePresence, useScroll } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, MotionConfig } from 'framer-motion'
 import { useAuthStore } from './store/authStore'
 import ErrorBoundary from './components/ErrorBoundary'
 import HomePage from './pages/HomePage'
@@ -79,9 +79,11 @@ export default function App() {
   useEffect(() => { init() }, [init])
   return (
     <BrowserRouter>
-      <ErrorBoundary>
-        <AppInner />
-      </ErrorBoundary>
+      <MotionConfig reducedMotion="user">
+        <ErrorBoundary>
+          <AppInner />
+        </ErrorBoundary>
+      </MotionConfig>
     </BrowserRouter>
   )
 }

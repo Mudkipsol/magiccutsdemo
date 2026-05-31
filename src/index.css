@@ -12,6 +12,21 @@
     overflow-x: hidden;
   }
 
+  /* Respect reduced-motion: kill CSS animations (marquee/shimmer/ping) and
+     smooth scroll. Framer Motion components are handled by MotionConfig. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
   body {
     @apply bg-onyx-950 text-bone font-sans antialiased;
     overflow-x: hidden;

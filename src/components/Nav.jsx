@@ -155,7 +155,7 @@ export default function Nav() {
 function Logo() {
   return (
     <span className="relative flex h-10 w-10 items-center justify-center">
-      <svg viewBox="0 0 40 40" className="h-10 w-10">
+      <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden="true">
         <defs>
           <linearGradient id="navg" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#f3e6c2" />
@@ -163,18 +163,23 @@ function Logo() {
             <stop offset="1" stopColor="#9c6f20" />
           </linearGradient>
         </defs>
-        <circle cx="20" cy="20" r="18.5" fill="none" stroke="url(#navg)" strokeWidth="1.4" />
+        {/* Stamped double frame */}
+        <rect x="1.4" y="1.4" width="37.2" height="37.2" rx="10" fill="none" stroke="url(#navg)" strokeWidth="1.3" />
+        <rect x="4.8" y="4.8" width="30.4" height="30.4" rx="7" fill="none" stroke="url(#navg)" strokeWidth="0.6" opacity="0.4" />
+        {/* Monogram */}
         <text
           x="20"
-          y="26"
+          y="25.5"
           textAnchor="middle"
-          fontFamily="Fraunces, serif"
-          fontSize="19"
-          fontWeight="700"
+          fontFamily="Fraunces, Georgia, serif"
+          fontSize="18"
+          fontWeight="600"
           fill="url(#navg)"
         >
           M
         </text>
+        {/* Baseline rule — gives the mark a crafted, stamped finish */}
+        <rect x="15" y="29.2" width="10" height="1" rx="0.5" fill="url(#navg)" opacity="0.65" />
       </svg>
     </span>
   )
