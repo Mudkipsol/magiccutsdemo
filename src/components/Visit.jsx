@@ -58,14 +58,6 @@ export default function Visit() {
               rel="noreferrer"
               className="card group relative block h-full min-h-[280px] overflow-hidden"
             >
-              {/* Coordinate watermark — real lat/long for 2779 Martin Rd Dublin OH */}
-              <div className="absolute inset-0 flex items-center justify-center overflow-hidden select-none pointer-events-none">
-                <span
-                  className="font-mono text-5xl font-bold leading-tight text-gold-300/[0.06] rotate-[-12deg] text-center whitespace-nowrap"
-                >
-                  40.1028°N<br />83.1421°W
-                </span>
-              </div>
               <div className="relative flex h-full flex-col justify-between p-7">
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold-300/40 bg-onyx-950 text-gold-300">
                   <MapPin size={18} />

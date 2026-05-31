@@ -16,6 +16,11 @@ export const shop = {
   googleReviews: 'https://www.google.com/maps/search/?api=1&query=Magic+Cuts+Salon+Dublin+OH',
   instagram: 'https://www.instagram.com/themagic.cuts/',
   instagramHandle: '@themagic.cuts',
+  // Real Google rating + review count. Fill these in from the shop's Google
+  // Business Profile to surface the hero trust badge. Leave null until you have
+  // the real numbers — do not invent a rating.
+  googleRating: null,        // e.g. 4.9
+  googleReviewCount: null,   // e.g. 200
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -90,7 +95,7 @@ export const services = [
     name: 'Skin Fade',
     price: 40,
     duration: '50 min',
-    blurb: 'Bald-to-blend done by eye, not by guard alone. Clean lines, sharp edge-up.',
+    blurb: 'We fade by eye — the clippers are just the tool. Clean lines, sharp edge-up.',
   },
   {
     id: 'cut-beard',
@@ -105,7 +110,7 @@ export const services = [
     name: 'Hot-Towel Shave',
     price: 40,
     duration: '40 min',
-    blurb: 'Straight-razor, the old way. Steamed towels, warm lather, a cooling finish.',
+    blurb: 'A proper straight-razor shave. Steamed towels, warm lather, a cooling finish.',
   },
   {
     id: 'beard',

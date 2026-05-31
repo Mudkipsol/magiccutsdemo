@@ -12,7 +12,7 @@ export default function SectionHead({ eyebrow, title, accent, intro, align = 'le
       </Reveal>
       <Reveal delay={0.05}>
         <h2 className="mt-5 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-bone text-balance">
-          {title} {accent && <span className="gold-text italic">{accent}</span>}
+          {title} {accent && <span className="italic text-bone">{accent}</span>}
         </h2>
       </Reveal>
       {intro && (

@@ -19,7 +19,7 @@ export default function Services() {
           />
           <Reveal delay={0.1}>
             <button onClick={() => navigate('/book')} className="btn-ghost shrink-0">
-              Book any service →
+              Book a Chair →
             </button>
           </Reveal>
         </div>
@@ -47,7 +47,7 @@ export default function Services() {
                     </span>
                   )}
                 </div>
-                <p className="mt-1.5 text-sm leading-relaxed text-bone/50">{s.blurb}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-bone/65">{s.blurb}</p>
                 <p className="mt-2 text-[0.65rem] uppercase tracking-widest text-bone/30">{s.duration}</p>
               </div>
               <div className="shrink-0 text-right">

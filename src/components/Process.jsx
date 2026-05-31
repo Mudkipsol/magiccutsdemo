@@ -21,7 +21,7 @@ export default function Process() {
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-5 text-base leading-relaxed text-bone/55">
+              <p className="mt-5 text-base leading-relaxed text-bone/70">
                 Whether it's your first visit or your fortieth, the routine
                 doesn't change — consistency is what makes the cut repeatable.
               </p>
@@ -44,7 +44,7 @@ export default function Process() {
                 </span>
                 <div>
                   <h3 className="font-display text-2xl text-bone">{p.title}</h3>
-                  <p className="mt-2 text-base leading-relaxed text-bone/55">{p.text}</p>
+                  <p className="mt-2 text-base leading-relaxed text-bone/70">{p.text}</p>
                 </div>
               </motion.div>
             ))}

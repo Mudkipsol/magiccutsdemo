@@ -24,13 +24,13 @@ export default function Team() {
             intro="Pick who you want before you walk in. Every barber at Magic Cuts has a specialty — and a chair with your name on it."
           />
           <Reveal delay={0.1}>
-            <button onClick={() => navigate('/book')} className="btn-gold shrink-0">
-              Book Your Barber
+            <button onClick={() => navigate('/book')} className="btn-ghost shrink-0">
+              Book a Chair →
             </button>
           </Reveal>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {barbers.map((b, i) => (
             <motion.div
               key={b.id}

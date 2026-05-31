@@ -4,6 +4,10 @@ import SectionHead from './SectionHead'
 import Reveal from './Reveal'
 import { Star } from './Icons'
 
+// NOTE: the quotes in data.js `testimonials` are placeholder copy. Replace them
+// with real customer reviews before launch. Do not re-add a "via Google" /
+// verified-review label unless these are genuinely pulled from Google — implying
+// verification on invented quotes is a credibility (and trust) liability.
 export default function Testimonials() {
   return (
     <section className="relative py-24 sm:py-32">
@@ -45,17 +49,7 @@ export default function Testimonials() {
               </blockquote>
               <figcaption className="mt-6 border-t border-white/[0.07] pt-4">
                 <p className="text-sm font-semibold text-bone">{t.name}</p>
-                <div className="flex items-center justify-between">
-                  <p className="text-xs uppercase tracking-widest text-gold-300/70">{t.detail}</p>
-                  <a
-                    href={shop.googleReviews}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[0.6rem] text-bone/25 transition-colors hover:text-bone/60"
-                  >
-                    via Google
-                  </a>
-                </div>
+                <p className="mt-0.5 text-xs uppercase tracking-widest text-bone/40">{t.detail}</p>
               </figcaption>
             </motion.figure>
           ))}

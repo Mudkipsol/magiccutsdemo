@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Phone, ArrowDown } from 'lucide-react'
+import { Phone, ArrowDown, Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { shop, hours } from '../data'
 
@@ -86,11 +86,11 @@ export default function Hero() {
             custom={2}
             initial="hidden"
             animate="show"
-            className="mt-7 max-w-xl text-lg leading-relaxed text-bone/65"
+            className="mt-7 max-w-xl text-lg leading-relaxed text-bone/75"
           >
             Magic Cuts is Dublin's home for precision haircuts, beard work, and
-            straight-razor shaves. Every chair, every cut, every time — done the
-            right way.
+            straight-razor shaves. Every chair, every cut, every time. No off
+            days.
           </motion.p>
 
           <motion.div
@@ -101,13 +101,38 @@ export default function Hero() {
             className="mt-9 flex flex-wrap items-center gap-4"
           >
             <button onClick={() => navigate('/book')} className="btn-gold">
-              Book Your Chair
+              Book a Chair
             </button>
             <a href={shop.phoneHref} className="btn-ghost">
               <Phone size={16} />
               {shop.phone}
             </a>
           </motion.div>
+
+          {/* Aggregate rating — the trust signal that converts for local services.
+              Renders only when real numbers are set in data.js (shop.googleRating /
+              shop.googleReviewCount). Do NOT hardcode a fake rating here. */}
+          {shop.googleRating && shop.googleReviewCount && (
+            <motion.a
+              href={shop.googleReviews}
+              target="_blank"
+              rel="noreferrer"
+              variants={rise}
+              custom={3.5}
+              initial="hidden"
+              animate="show"
+              className="mt-5 inline-flex items-center gap-2.5 text-sm text-bone/70 transition-colors hover:text-bone"
+            >
+              <span className="flex items-center gap-0.5 text-gold-300">
+                {[...Array(5)].map((_, n) => (
+                  <Star key={n} size={14} fill="currentColor" strokeWidth={0} />
+                ))}
+              </span>
+              <span className="font-semibold text-bone">{shop.googleRating}</span>
+              <span className="text-bone/45">·</span>
+              <span>{shop.googleReviewCount}+ Google reviews</span>
+            </motion.a>
+          )}
 
           {/* Live status — the one dynamic detail worth surfacing, kept inline */}
           <motion.div

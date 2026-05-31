@@ -50,7 +50,7 @@
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-3 font-sans text-[0.7rem] font-semibold uppercase tracking-ultra text-gold-300;
+    @apply inline-flex items-center gap-3 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-ash;
   }
 
   .gold-text {
@@ -84,6 +84,7 @@
     background: linear-gradient(135deg, #e7cd8c, #c79a3a 55%, #9c6f20);
     box-shadow: 0 14px 34px -14px rgba(199, 154, 58, 0.7);
   }
+  /* Shine sweeps once on hover — not a perpetual loop. */
   .btn-gold::after {
     content: '';
     position: absolute;
@@ -92,8 +93,11 @@
     width: 40%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-    animation: btn-shimmer 4s ease-in-out infinite;
+    transform: translateX(-120%) skewX(-15deg);
     pointer-events: none;
+  }
+  .btn-gold:hover::after {
+    animation: btn-shimmer 0.9s ease-out;
   }
   .btn-gold:hover {
     transform: translateY(-2px);

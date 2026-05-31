@@ -1,42 +1,18 @@
-import { useRef } from 'react'
-import { motion, animate } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { stats, shop } from '../data'
 import Reveal from './Reveal'
 
-function AnimatedStat({ value, label, delay = 0 }) {
-  const numMatch = value.match(/\d+/)
-  const entered = useRef(false)
-  const spanRef = useRef(null)
-
-  const handleEnter = () => {
-    if (!numMatch || entered.current) return
-    entered.current = true
-    const num = parseInt(numMatch[0])
-    const parts = value.split(numMatch[0])
-    const prefix = parts[0] || ''
-    const suffix = parts[1] || ''
-    animate(0, num, {
-      duration: 1.5,
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => {
-        if (spanRef.current) spanRef.current.textContent = `${prefix}${Math.round(v)}${suffix}`
-      },
-    })
-  }
-
+function Stat({ value, label, delay = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay, duration: 0.5 }}
-      onViewportEnter={handleEnter}
       className="bg-onyx-900 p-5"
     >
-      <p className="font-display text-2xl leading-none text-gold-300">
-        <span ref={spanRef}>{numMatch ? value.replace(numMatch[0], '0') : value}</span>
-      </p>
-      <p className="mt-2 text-xs leading-snug text-bone/50">{label}</p>
+      <p className="font-display text-2xl leading-none text-bone">{value}</p>
+      <p className="mt-2 text-xs leading-snug text-bone/55">{label}</p>
     </motion.div>
   )
 }
@@ -85,11 +61,11 @@ export default function Experience() {
           </Reveal>
           <Reveal delay={0.05}>
             <h2 className="mt-5 font-display text-[clamp(2.2rem,4.5vw,3.4rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-bone text-balance">
-              A barbershop built on <span className="gold-text italic">craft</span>, not churn.
+              A barbershop that treats the cut like <span className="gold-text italic">craft</span>.
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <div className="mt-6 space-y-4 text-lg leading-relaxed text-bone/65">
+            <div className="mt-6 space-y-4 text-lg leading-relaxed text-bone/75">
               <p>
                 Magic Cuts opened in {shop.established} with one idea: bring real
                 barbering back to {shop.city}. The kind where someone reads your
@@ -107,7 +83,7 @@ export default function Experience() {
 
           <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06] sm:grid-cols-4">
             {stats.map((s, i) => (
-              <AnimatedStat key={s.label} value={s.value} label={s.label} delay={i * 0.08} />
+              <Stat key={s.label} value={s.value} label={s.label} delay={i * 0.08} />
             ))}
           </div>
         </div>

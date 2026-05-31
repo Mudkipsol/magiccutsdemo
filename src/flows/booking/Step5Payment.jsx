@@ -92,8 +92,9 @@ export default function Step5Payment() {
   return (
     <div>
       <h1 className="font-display text-3xl text-bone">Secure your chair</h1>
-      <p className="mt-2 text-bone/60">
-        A <span className="text-gold-300 font-semibold">$11 deposit</span> reserves your spot and applies to your service price.
+      <p className="mt-2 text-bone/70">
+        The <span className="text-gold-300 font-semibold">$11 deposit</span> isn't an extra charge — it comes
+        straight off your cut and just holds your time so the chair's ready when you are.
       </p>
 
       {/* Summary */}

@@ -31,7 +31,7 @@ export default {
         sans: ['Manrope', 'system-ui', 'sans-serif'],
       },
       letterSpacing: {
-        ultra: '0.32em',
+        ultra: '0.24em',
       },
       maxWidth: {
         shell: '1240px',
