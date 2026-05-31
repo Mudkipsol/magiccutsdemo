@@ -95,7 +95,7 @@ export default function Visit() {
         {/* FAQ */}
         <div className="mx-auto mt-16 max-w-3xl">
           {faqs.map((f, i) => (
-            <Faq key={i} {...f} />
+            <Faq key={i} id={i} {...f} />
           ))}
         </div>
       </div>
@@ -103,12 +103,15 @@ export default function Visit() {
   )
 }
 
-function Faq({ q, a }) {
+function Faq({ q, a, id }) {
   const [open, setOpen] = useState(false)
+  const panelId = `faq-panel-${id}`
   return (
     <div className="border-b border-white/10">
       <button
         onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={panelId}
         className="flex w-full items-center justify-between gap-4 py-5 text-left"
       >
         <span className="font-display text-lg text-bone">{q}</span>
@@ -119,13 +122,14 @@ function Faq({ q, a }) {
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
+            id={panelId}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-bone/60">{a}</p>
+            <p className="pb-5 text-bone/70">{a}</p>
           </motion.div>
         )}
       </AnimatePresence>

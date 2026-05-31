@@ -38,6 +38,32 @@
     color: #f4efe6;
   }
 
+  /* Visible focus ring for keyboard users (mouse clicks stay clean). */
+  *:focus-visible {
+    outline: 2px solid rgba(216, 178, 90, 0.85);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Skip-to-content link — hidden until focused via keyboard. */
+  .skip-link {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 200;
+    transform: translate(-50%, -120%);
+    border-radius: 0 0 0.75rem 0.75rem;
+    background: #d8b25a;
+    color: #0a0a0b;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+  }
+  .skip-link:focus {
+    transform: translate(-50%, 0);
+  }
+
   /* Refined scrollbar */
   ::-webkit-scrollbar {
     width: 10px;

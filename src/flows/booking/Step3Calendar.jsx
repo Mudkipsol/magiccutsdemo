@@ -180,7 +180,19 @@ export default function Step3Calendar() {
               <p className="text-sm font-semibold text-bone">
                 {format(selectedDate, 'EEEE, MMM d')}
               </p>
-              <p className="mt-1 text-xs text-bone/40">{availableSlots.length} slots open</p>
+              <p className="mt-1 text-xs">
+                {daySlots.length === 0 ? (
+                  <span className="text-bone/40">&nbsp;</span>
+                ) : availableSlots.length === 0 ? (
+                  <span className="text-bone/40">Fully booked — try another day</span>
+                ) : availableSlots.length <= 3 ? (
+                  <span className="font-semibold text-gold-300">
+                    Only {availableSlots.length} {availableSlots.length === 1 ? 'slot' : 'slots'} left
+                  </span>
+                ) : (
+                  <span className="text-bone/40">{availableSlots.length} slots open</span>
+                )}
+              </p>
               {loading ? (
                 <p className="mt-4 text-sm text-bone/40">Loading…</p>
               ) : (
