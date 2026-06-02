@@ -5,6 +5,13 @@
 @layer base {
   :root {
     color-scheme: dark;
+    /* ─ Design tokens ─ */
+    --max: 1280px;
+    --rule: rgba(243, 238, 227, 0.12);
+    --rule-strong: rgba(243, 238, 227, 0.22);
+    --accent: #c79a3a;
+    --ink: #0c0b09;
+    --bone: #f3eee3;
   }
 
   html {
@@ -12,8 +19,8 @@
     overflow-x: hidden;
   }
 
-  /* Respect reduced-motion: kill CSS animations (marquee/shimmer/ping) and
-     smooth scroll. Framer Motion components are handled by MotionConfig. */
+  /* Respect reduced-motion: kill CSS animations and smooth scroll. Framer
+     Motion components are handled by MotionConfig in App.jsx. */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -34,64 +41,84 @@
   }
 
   ::selection {
-    background: rgba(199, 154, 58, 0.3);
-    color: #f4efe6;
+    background: rgba(199, 154, 58, 0.28);
+    color: #f3eee3;
   }
 
-  /* Visible focus ring for keyboard users (mouse clicks stay clean). */
+  /* Keyboard focus ring (mouse stays clean). */
   *:focus-visible {
-    outline: 2px solid rgba(216, 178, 90, 0.85);
+    outline: 2px solid rgba(199, 154, 58, 0.85);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
-  /* Skip-to-content link — hidden until focused via keyboard. */
+  /* Skip-to-content link — hidden until keyboard focus. */
   .skip-link {
     position: fixed;
     top: 0;
     left: 50%;
     z-index: 200;
     transform: translate(-50%, -120%);
-    border-radius: 0 0 0.75rem 0.75rem;
-    background: #d8b25a;
-    color: #0a0a0b;
+    border-radius: 0 0 0.5rem 0.5rem;
+    background: var(--accent);
+    color: #0c0b09;
     padding: 0.6rem 1.25rem;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
     transition: transform 0.2s ease;
   }
   .skip-link:focus {
     transform: translate(-50%, 0);
   }
 
-  /* Refined scrollbar */
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 11px;
   }
   ::-webkit-scrollbar-track {
-    background: #0a0a0b;
+    background: #0c0b09;
   }
   ::-webkit-scrollbar-thumb {
-    background: #34343d;
-    border-radius: 99px;
+    background: #322b22;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #b9882a;
   }
 }
 
-@keyframes btn-shimmer {
-  0%       { transform: translateX(-120%) skewX(-15deg); }
-  55%, 100% { transform: translateX(220%)  skewX(-15deg); }
-}
-
 @layer components {
   .shell {
-    @apply mx-auto w-full max-w-shell px-6 sm:px-8 lg:px-12;
+    @apply mx-auto w-full px-6 sm:px-8 lg:px-12;
+    max-width: var(--max);
   }
 
+  /* ─ Editorial index label:  Nº 01 — THE MENU ─ */
+  .kicker {
+    @apply inline-flex items-center gap-3 font-sans text-[0.7rem] font-semibold uppercase text-ash;
+    letter-spacing: 0.24em;
+  }
+  /* legacy alias still used by inner pages */
   .eyebrow {
-    @apply inline-flex items-center gap-3 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-ash;
+    @apply inline-flex items-center gap-3 font-sans text-[0.7rem] font-semibold uppercase text-ash;
+    letter-spacing: 0.24em;
+  }
+
+  /* ─ Rule lines (the structural signature) ─ */
+  .rule {
+    height: 1px;
+    background: var(--rule);
+  }
+  .rule-strong {
+    height: 1px;
+    background: var(--rule-strong);
+  }
+  .gold-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(199, 154, 58, 0.5), transparent);
+  }
+  .hairline {
+    border-top: 1px solid var(--rule);
   }
 
   .gold-text {
@@ -101,100 +128,78 @@
     -webkit-text-fill-color: transparent;
   }
 
-  .gold-rule {
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(199, 154, 58, 0.6),
-      transparent
-    );
-  }
-
-  .hairline {
-    @apply border-t border-white/[0.07];
-  }
-
+  /* ─ Buttons: squared, editorial, no shimmer ─ */
   .btn {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 font-sans text-sm font-semibold tracking-wide transition-all duration-300 ease-out;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-[3px] px-6 py-3 font-sans text-[0.78rem] font-bold uppercase transition-all duration-300 ease-out;
+    letter-spacing: 0.1em;
   }
 
   .btn-gold {
     @apply btn text-onyx-950;
-    overflow: hidden;
-    background: linear-gradient(135deg, #e7cd8c, #c79a3a 55%, #9c6f20);
-    box-shadow: 0 14px 34px -14px rgba(199, 154, 58, 0.7);
-  }
-  /* Shine sweeps once on hover — not a perpetual loop. */
-  .btn-gold::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-    transform: translateX(-120%) skewX(-15deg);
-    pointer-events: none;
-  }
-  .btn-gold:hover::after {
-    animation: btn-shimmer 0.9s ease-out;
+    background: #c79a3a;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
   .btn-gold:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 22px 48px -16px rgba(199, 154, 58, 0.85);
+    background: #d8b25a;
+    transform: translateY(-1px);
   }
 
   .btn-ghost {
-    @apply btn border border-white/15 text-bone/90;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(6px);
+    @apply btn text-bone/90;
+    background: transparent;
+    border: 1px solid var(--rule-strong);
   }
   .btn-ghost:hover {
-    @apply border-gold-300/60 text-bone;
-    background: rgba(199, 154, 58, 0.08);
+    border-color: rgba(199, 154, 58, 0.6);
+    color: #f3eee3;
   }
 
+  /* ─ Forms ─ */
   .input {
-    @apply w-full rounded-xl border border-white/10 bg-onyx-950/60 px-4 py-3 text-sm text-bone placeholder-bone/30 outline-none transition-colors;
+    @apply w-full rounded-[4px] border bg-onyx-950/60 px-4 py-3 text-sm text-bone outline-none transition-colors;
+    border-color: var(--rule-strong);
+  }
+  .input::placeholder {
+    color: rgba(243, 238, 227, 0.3);
   }
   .input:focus {
-    @apply border-gold-300/60 bg-onyx-950;
-    box-shadow: 0 0 0 3px rgba(199, 154, 58, 0.12);
+    border-color: rgba(199, 154, 58, 0.6);
+    background: #0c0b09;
+    box-shadow: 0 0 0 3px rgba(199, 154, 58, 0.1);
   }
-  /* dark date/select controls */
   .input::-webkit-calendar-picker-indicator {
     filter: invert(0.8) sepia(1) saturate(3) hue-rotate(5deg);
     cursor: pointer;
   }
   select.input option {
-    background: #16161a;
-    color: #f4efe6;
+    background: #15120f;
+    color: #f3eee3;
   }
 
+  /* ─ Panels (sharp, hairline; replaces heavy rounded cards) ─ */
   .card {
-    @apply relative rounded-2xl border border-white/[0.08] bg-onyx-900/70;
-    background-image: linear-gradient(
-      160deg,
-      rgba(255, 255, 255, 0.035),
-      rgba(255, 255, 255, 0) 45%
-    );
+    @apply relative rounded-[6px] border bg-onyx-900/70;
+    border-color: var(--rule);
   }
 }
 
 @layer utilities {
-  /* Film grain overlay */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Fine film grain — kept very subtle for tactile, print-like texture. */
   .grain::before {
     content: '';
     position: fixed;
     inset: 0;
     z-index: 60;
     pointer-events: none;
-    opacity: 0.05;
+    opacity: 0.04;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  .text-balance {
-    text-wrap: balance;
   }
 }
