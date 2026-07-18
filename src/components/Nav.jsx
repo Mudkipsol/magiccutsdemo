@@ -30,8 +30,10 @@ export default function Nav() {
     <header className="fixed inset-x-0 top-0 z-50 bg-onyx-950 border-b border-white/10">
       <nav className="shell flex h-20 items-center justify-between lg:h-24">
         <a href="#top" className="flex items-center gap-4" aria-label="Magic Cuts home">
-          <img src="/logo-mark.png" alt="" className="h-11 w-auto lg:h-12" />
-          <span className="font-display text-3xl font-bold uppercase tracking-[0.05em] text-bone lg:text-4xl">
+          {/* Optical alignment: the mark's sparkle sits above the MC letters, so
+              the glyphs ride low in the image box; nudge to center on the letters. */}
+          <img src="/logo-mark.png" alt="" className="h-11 w-auto -translate-y-[3px] lg:h-12" />
+          <span className="font-display text-3xl font-bold uppercase leading-none tracking-[0.05em] text-bone translate-y-[1px] lg:text-4xl">
             Magic Cuts
           </span>
         </a>
