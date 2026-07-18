@@ -28,32 +28,32 @@ export default function Nav() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-onyx-950 border-b border-white/10">
-      <nav className="shell flex h-16 items-center justify-between">
-        <a href="#top" className="flex items-center gap-3" aria-label="Magic Cuts home">
-          <span aria-hidden="true" className="pole h-7 w-2.5 rounded-full" />
-          <span className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-bone">
+      <nav className="shell flex h-20 items-center justify-between lg:h-24">
+        <a href="#top" className="flex items-center gap-4" aria-label="Magic Cuts home">
+          <span aria-hidden="true" className="pole h-9 w-3 rounded-full" />
+          <span className="font-display text-3xl font-bold uppercase tracking-[0.05em] text-bone lg:text-4xl">
             Magic Cuts
           </span>
         </a>
 
-        <div className="hidden items-center gap-10 lg:flex">
+        <div className="hidden items-center gap-12 lg:flex">
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="group relative font-display text-base font-bold uppercase tracking-[0.1em] text-bone/70 transition-colors hover:text-bone"
+              className="group relative py-2 font-display text-lg font-bold uppercase tracking-[0.12em] text-bone/70 transition-colors hover:text-bone"
             >
               {l.label}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-gold-300 transition-all duration-200 group-hover:w-full" />
+              <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-gold-300 transition-all duration-200 group-hover:w-full" />
             </a>
           ))}
         </div>
 
-        <div className="hidden items-center gap-7 lg:flex">
+        <div className="hidden items-center gap-9 lg:flex">
           {account && (
             <Link
               to={account.to}
-              className={`font-display text-base font-bold uppercase tracking-[0.1em] transition-colors ${
+              className={`font-display text-lg font-bold uppercase tracking-[0.12em] transition-colors ${
                 account.prominent ? 'text-gold-300 hover:text-gold-200' : 'text-bone/70 hover:text-bone'
               }`}
             >
@@ -63,7 +63,7 @@ export default function Nav() {
           <a href={shop.phoneHref} className="font-mono text-sm text-bone/80 transition-colors hover:text-gold-300">
             {shop.phone}
           </a>
-          <Link to="/book" className="btn-gold !px-6 !py-3 text-sm">
+          <Link to="/book" className="btn-gold text-base">
             Book a Chair
           </Link>
         </div>

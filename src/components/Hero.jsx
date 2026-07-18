@@ -48,7 +48,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-onyx-950/40" />
       </div>
 
-      <div className="shell flex flex-1 items-center pb-20 pt-24">
+      <div className="shell flex flex-1 items-center pb-20 pt-32">
         <div className="w-full">
           <h1 className="font-display text-[clamp(3.2rem,9.5vw,10.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.01em] text-bone">
             <span className="block overflow-hidden">
