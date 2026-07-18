@@ -93,7 +93,19 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Legal, above the wordmark so the brand gets the last word */}
+      {/* The shop's actual mark, set like a colophon stamp */}
+      <div className="flex justify-center pb-16 pt-6">
+        <motion.img
+          src="/logo-full.png"
+          alt="Magic Cuts Barbershop"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="w-64 select-none sm:w-80"
+        />
+      </div>
+
       <div className="border-t border-white/[0.07]">
         <div className="shell flex flex-col items-start justify-between gap-3 py-5 font-mono text-[11px] text-bone/35 sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} {shop.full}. Est. {shop.established}, Dublin, Ohio. All rights reserved.</p>
@@ -102,19 +114,6 @@ export default function Footer() {
             <Link to="/terms" className="transition-colors hover:text-bone/70">Terms</Link>
           </div>
         </div>
-      </div>
-
-      {/* The wordmark, cropped at the baseline: the site's final image */}
-      <div className="relative overflow-hidden" aria-hidden="true">
-        <motion.p
-          initial={{ y: '30%', opacity: 0 }}
-          whileInView={{ y: '12%', opacity: 1 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="select-none whitespace-nowrap text-center font-display text-[17.5vw] font-bold uppercase leading-[0.78] text-bone/95"
-        >
-          Magic Cuts
-        </motion.p>
       </div>
 
       {/* The pole, as the last pixel of the site */}
