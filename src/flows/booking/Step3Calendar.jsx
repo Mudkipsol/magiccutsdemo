@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, startOfDay, getDay } from 'date-fns'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useBookingStore } from '../../store/bookingStore'
 import { supabase } from '../../lib/supabase'
 
@@ -106,38 +105,40 @@ export default function Step3Calendar() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl text-bone">Pick a date & time</h1>
-      <p className="mt-2 text-bone/60">
+      <h1 className="font-display text-5xl font-bold uppercase text-bone">Pick a date & time</h1>
+      <p className="mt-3 text-bone/60">
         Showing availability for{' '}
         <span className="text-gold-300">{barber?.name || 'any barber'}</span>.
         Closed Sundays.
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto]">
+      <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_auto]">
         {/* Calendar */}
-        <div className="card rounded-2xl p-6">
+        <div className="rounded-[2px] border border-white/10 p-6">
           {/* Month nav */}
           <div className="flex items-center justify-between">
             <button
               onClick={() => setMonth((m) => subMonths(m, 1))}
               disabled={isBefore(subMonths(month, 1), today)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-bone/60 hover:border-gold-300/40 hover:text-gold-300 disabled:opacity-30"
+              aria-label="Previous month"
+              className="flex h-9 w-9 items-center justify-center rounded-[2px] border border-white/15 font-display text-lg text-bone/60 transition-colors hover:border-gold-300/50 hover:text-gold-300 disabled:opacity-30"
             >
-              <ChevronLeft size={16} />
+              ‹
             </button>
-            <span className="font-display text-lg text-bone">{format(month, 'MMMM yyyy')}</span>
+            <span className="font-display text-2xl font-bold uppercase text-bone">{format(month, 'MMMM yyyy')}</span>
             <button
               onClick={() => setMonth((m) => addMonths(m, 1))}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-bone/60 hover:border-gold-300/40 hover:text-gold-300"
+              aria-label="Next month"
+              className="flex h-9 w-9 items-center justify-center rounded-[2px] border border-white/15 font-display text-lg text-bone/60 transition-colors hover:border-gold-300/50 hover:text-gold-300"
             >
-              <ChevronRight size={16} />
+              ›
             </button>
           </div>
 
           {/* Day headers */}
-          <div className="mt-4 grid grid-cols-7 text-center">
+          <div className="mt-5 grid grid-cols-7 text-center">
             {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
-              <div key={d} className="py-2 text-[0.65rem] font-semibold uppercase tracking-ultra text-bone/35">{d}</div>
+              <div key={d} className="py-2 font-mono text-[10px] uppercase tracking-widest text-bone/35">{d}</div>
             ))}
           </div>
 
@@ -153,10 +154,10 @@ export default function Step3Calendar() {
                   key={day.toISOString()}
                   disabled={disabled}
                   onClick={() => { setSelectedDate(day); setSelectedTime(null) }}
-                  className={`relative flex h-10 w-full items-center justify-center rounded-xl text-sm font-medium transition-all
+                  className={`relative flex h-10 w-full items-center justify-center rounded-[2px] font-mono text-sm transition-colors
                     ${disabled ? 'cursor-not-allowed text-bone/20' : 'hover:bg-gold-300/10 hover:text-bone'}
-                    ${isSelected ? 'bg-gold-300 text-onyx-950 shadow-gold' : ''}
-                    ${isToday && !isSelected ? 'ring-1 ring-gold-300/50 text-gold-300' : ''}
+                    ${isSelected ? 'bg-gold-400 font-medium text-onyx-950' : ''}
+                    ${isToday && !isSelected ? 'border border-gold-300/50 text-gold-300' : ''}
                     ${!isSelected && !disabled ? 'text-bone/80' : ''}
                   `}
                 >
@@ -175,16 +176,16 @@ export default function Step3Calendar() {
               initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
-              className="card w-full rounded-2xl p-5 lg:w-64"
+              className="w-full rounded-[2px] border border-white/10 p-6 lg:w-64"
             >
-              <p className="text-sm font-semibold text-bone">
+              <p className="font-display text-xl font-bold uppercase text-bone">
                 {format(selectedDate, 'EEEE, MMM d')}
               </p>
-              <p className="mt-1 text-xs text-bone/40">{availableSlots.length} slots open</p>
+              <p className="mt-1 font-mono text-xs text-bone/40">{availableSlots.length} slots open</p>
               {loading ? (
-                <p className="mt-4 text-sm text-bone/40">Loading…</p>
+                <p className="mt-4 font-mono text-sm text-bone/40">Loading…</p>
               ) : (
-                <div className="mt-4 grid grid-cols-2 gap-1.5 lg:grid-cols-1">
+                <div className="mt-5 grid grid-cols-2 gap-1.5 lg:grid-cols-1">
                   {daySlots.length === 0 && (
                     <p className="col-span-2 text-sm text-bone/40 lg:col-span-1">
                       {barber?.name || 'This barber'} isn't working this day.
@@ -198,10 +199,10 @@ export default function Step3Calendar() {
                         key={t}
                         disabled={booked}
                         onClick={() => setSelectedTime(t)}
-                        className={`rounded-xl py-2.5 text-sm font-medium transition-all ${
+                        className={`rounded-[2px] py-2.5 font-mono text-sm transition-colors ${
                           booked ? 'cursor-not-allowed text-bone/20 line-through' :
-                          active ? 'bg-gold-300 text-onyx-950 shadow-gold' :
-                          'border border-white/10 text-bone/70 hover:border-gold-300/40 hover:text-gold-300'
+                          active ? 'bg-gold-400 font-medium text-onyx-950' :
+                          'border border-white/15 text-bone/70 hover:border-gold-300/50 hover:text-gold-300'
                         }`}
                       >
                         {to12h(t)}
@@ -216,9 +217,9 @@ export default function Step3Calendar() {
               key="placeholder"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="card flex w-full items-center justify-center rounded-2xl p-8 text-center text-bone/30 lg:w-64"
+              className="flex w-full items-center justify-center rounded-[2px] border border-white/10 p-8 text-center text-bone/30 lg:w-64"
             >
-              <p className="text-sm">← Select a date to see available times</p>
+              <p className="font-mono text-sm">Select a date to see available times</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -226,16 +227,13 @@ export default function Step3Calendar() {
 
       <AnimatePresence>
         {selectedDate && selectedTime && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-6">
-            <div className="mb-4 flex items-center gap-3 rounded-xl border border-gold-300/20 bg-gold-300/5 p-4">
-              <span className="text-gold-300">✓</span>
-              <span className="text-sm text-bone">
-                <strong>{format(selectedDate, 'EEEE, MMMM d')}</strong> at <strong>{to12h(selectedTime)}</strong>
-                {barber && <> with <strong>{barber.name}</strong></>}
-              </span>
-            </div>
-            <button onClick={confirm} className="btn-gold w-full">
-              Confirm date & time →
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-8 border-t border-gold-300/40 pt-5">
+            <p className="font-mono text-sm text-bone/70">
+              {format(selectedDate, 'EEEE, MMMM d')} at {to12h(selectedTime)}
+              {barber && <> with {barber.name}</>}
+            </p>
+            <button onClick={confirm} className="btn-gold mt-4 w-full">
+              Confirm date & time
             </button>
           </motion.div>
         )}

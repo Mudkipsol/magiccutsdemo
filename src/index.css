@@ -100,7 +100,7 @@
   }
 
   .input {
-    @apply w-full rounded-xl border border-white/10 bg-onyx-950/60 px-4 py-3 text-sm text-bone placeholder-bone/30 outline-none transition-colors;
+    @apply w-full rounded-[2px] border border-white/15 bg-onyx-950/60 px-4 py-3.5 text-sm text-bone placeholder-bone/30 outline-none transition-colors;
   }
   .input:focus {
     @apply border-gold-300/60 bg-onyx-950;

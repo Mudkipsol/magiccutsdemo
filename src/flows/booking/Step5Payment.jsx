@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { format } from 'date-fns'
-import { Loader2, Lock, ShieldCheck } from 'lucide-react'
 import { useBookingStore } from '../../store/bookingStore'
 import { hasStripe } from '../../lib/stripe'
 import toast from 'react-hot-toast'
@@ -91,74 +90,68 @@ export default function Step5Payment() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl text-bone">Secure your chair</h1>
-      <p className="mt-2 text-bone/60">
-        A <span className="text-gold-300 font-semibold">$11 deposit</span> reserves your spot and applies to your service price.
+      <h1 className="font-display text-5xl font-bold uppercase text-bone">Secure your chair</h1>
+      <p className="mt-3 text-bone/60">
+        An <span className="font-semibold text-gold-300">$11 deposit</span> reserves your spot and applies to your service price.
       </p>
 
-      {/* Summary */}
+      {/* Summary — ruled, not boxed */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mt-6 rounded-2xl border border-white/10 bg-onyx-900 p-5"
+        className="mt-8 border-y border-white/[0.08] py-5"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-baseline justify-between gap-6">
           <div>
-            <p className="font-display text-lg text-bone">{service?.name}</p>
-            <p className="text-sm text-bone/55">
+            <p className="font-display text-2xl font-bold uppercase text-bone">{service?.name}</p>
+            <p className="mt-1 font-mono text-xs text-bone/55">
               {barber?.name || 'Any barber'} · {date ? format(new Date(date), 'MMM d') : ''} · {to12h(time)}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-bone/40">Due today</p>
-            <p className="font-display text-2xl text-gold-300">$11</p>
-            <p className="text-xs text-bone/40">Balance ${(service?.price || 0) - 11} at the shop</p>
+            <p className="font-display text-4xl font-bold text-gold-300">$11</p>
+            <p className="mt-1 font-mono text-xs text-bone/40">due today · ${(service?.price || 0) - 11} at the shop</p>
           </div>
         </div>
       </motion.div>
 
-      <div className="mt-7">
+      <div className="mt-8">
         {!hasStripe ? (
-          <div className="rounded-2xl border border-dashed border-yellow-500/30 bg-yellow-500/5 p-6 text-center">
-            <p className="text-sm text-yellow-300">
-              Stripe not configured. Add <code className="rounded bg-white/10 px-1">VITE_STRIPE_PUBLISHABLE_KEY</code> to .env.local
+          <div className="rounded-[2px] border border-dashed border-yellow-500/30 p-6 text-center">
+            <p className="font-mono text-sm text-yellow-300">
+              Stripe not configured. Add VITE_STRIPE_PUBLISHABLE_KEY to .env.local
             </p>
             <button
               onClick={() => setAppointmentId('demo-' + Date.now())}
-              className="btn-gold mt-4 text-xs"
+              className="btn-gold mt-5 text-sm"
             >
-              Demo: Skip payment →
+              Demo: skip payment
             </button>
           </div>
         ) : fetching ? (
-          <div className="flex justify-center py-10"><Loader2 size={24} className="animate-spin text-gold-300" /></div>
+          <p className="py-10 text-center font-mono text-sm text-bone/40">Loading payment…</p>
         ) : (
           <form onSubmit={pay}>
             {clientSecret && (
               <PaymentElement
                 options={{ layout: 'tabs' }}
-                className="mb-5"
+                className="mb-6"
               />
             )}
             <button
               type="submit"
               disabled={loading || !stripe}
-              className="btn-gold w-full"
+              className="btn-gold w-full disabled:opacity-60"
             >
-              {loading ? (
-                <><Loader2 size={16} className="animate-spin" /> Processing…</>
-              ) : (
-                <><Lock size={15} /> Pay $11 deposit</>
-              )}
+              {loading ? 'Processing…' : 'Pay $11 deposit'}
             </button>
           </form>
         )}
       </div>
 
-      <div className="mt-5 flex items-center justify-center gap-2 text-xs text-bone/35">
-        <ShieldCheck size={14} />
+      <p className="mt-6 text-center font-mono text-xs text-bone/35">
         Secured by Stripe. Your card data never touches our servers.
-      </div>
+      </p>
     </div>
   )
 }

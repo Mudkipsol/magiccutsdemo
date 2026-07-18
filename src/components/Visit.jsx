@@ -5,6 +5,8 @@ import { hours, shop, faqs } from '../data'
 
 const todayIdx = (new Date().getDay() + 6) % 7 // Mon=0
 
+const MAP_SRC = 'https://www.google.com/maps?q=2779+Martin+Rd,+Dublin,+OH+43017&output=embed'
+
 export default function Visit() {
   return (
     <section id="visit" className="relative border-t border-white/10 bg-onyx-900/40 py-24 sm:py-32">
@@ -19,8 +21,8 @@ export default function Visit() {
           Drop in, or <span className="gold-text">plan ahead.</span>
         </motion.h2>
 
-        <div className="mt-16 grid grid-cols-1 gap-14 lg:grid-cols-[1.5fr_1fr] lg:gap-28">
-          {/* The address, set like it matters */}
+        <div className="mt-16 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-20">
+          {/* Address, hours, contact */}
           <div>
             <span className="block overflow-hidden">
               <motion.a
@@ -31,7 +33,7 @@ export default function Visit() {
                 whileInView={{ y: '0%' }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="block font-display text-[clamp(3.2rem,7vw,8rem)] font-bold uppercase leading-[0.9] text-bone transition-colors duration-200 hover:text-gold-200"
+                className="block font-display text-[clamp(2.8rem,4.5vw,5.5rem)] font-bold uppercase leading-[0.9] text-bone transition-colors duration-200 hover:text-gold-200"
               >
                 2779 Martin Rd
               </motion.a>
@@ -40,68 +42,77 @@ export default function Visit() {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
             >
-              <p className="mt-3 font-display text-2xl font-bold uppercase text-bone/60">
+              <p className="mt-2 font-display text-2xl font-bold uppercase text-bone/60">
                 {shop.addressLine2}
               </p>
-              <p className="mt-4 font-mono text-xs tracking-widest text-gold-300/50">
-                40.1028° N · 83.1421° W · parking out front
-              </p>
 
-              <div className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-4 font-mono text-sm">
+              <div className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-4 font-mono text-sm">
                 <a href={shop.phoneHref} className="text-link">
                   {shop.phone}
                 </a>
                 <a href={shop.instagram} target="_blank" rel="noreferrer" className="text-link">
                   {shop.instagramHandle}
                 </a>
-                <a href={shop.mapHref} target="_blank" rel="noreferrer" className="text-link">
-                  Google Maps →
-                </a>
               </div>
 
-              <Link to="/book" className="btn-gold mt-12 inline-flex">
+              {/* Hours ledger */}
+              <div className="mt-10">
+                {hours.map((h, i) => {
+                  const closed = h.open === 'Closed'
+                  const today = i === todayIdx
+                  return (
+                    <div
+                      key={h.day}
+                      className="relative flex items-baseline justify-between border-t border-white/[0.08] py-3"
+                    >
+                      {today && (
+                        <span aria-hidden="true" className="absolute inset-x-0 top-[-1px] h-px bg-gold-300/60" />
+                      )}
+                      <span className={`font-display text-xl font-bold uppercase ${today ? 'text-gold-200' : 'text-bone/70'}`}>
+                        {h.day}
+                        {today && <span className="ml-3 font-mono text-xs font-normal normal-case text-gold-300/70">today</span>}
+                      </span>
+                      <span className={`font-mono text-sm tabular-nums ${today ? 'text-gold-200' : closed ? 'text-bone/30' : 'text-bone/60'}`}>
+                        {closed ? 'Closed' : `${h.open} – ${h.close}`}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <Link to="/book" className="btn-gold mt-10 inline-flex">
                 Book a Chair
               </Link>
             </motion.div>
           </div>
 
-          {/* Hours ledger */}
-          <div>
-            {hours.map((h, i) => {
-              const closed = h.open === 'Closed'
-              const today = i === todayIdx
-              return (
-                <motion.div
-                  key={h.day}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
-                  className="relative flex items-baseline justify-between overflow-hidden py-3.5"
-                >
-                  <motion.span
-                    aria-hidden="true"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true, margin: '-40px' }}
-                    transition={{ duration: 0.7, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                    className={`absolute inset-x-0 top-0 h-px origin-left ${
-                      today ? 'bg-gold-300/50' : 'bg-white/[0.08]'
-                    }`}
-                  />
-                  <span className={`font-display text-2xl font-bold uppercase ${today ? 'text-gold-200' : 'text-bone/70'}`}>
-                    {h.day}
-                    {today && <span className="ml-3 font-mono text-xs font-normal normal-case text-gold-300/70">today</span>}
-                  </span>
-                  <span className={`font-mono text-sm tabular-nums ${today ? 'text-gold-200' : closed ? 'text-bone/30' : 'text-bone/60'}`}>
-                    {closed ? 'Closed' : `${h.open} – ${h.close}`}
-                  </span>
-                </motion.div>
-              )
-            })}
-          </div>
+          {/* The map, in the shop's palette */}
+          <motion.div
+            initial={{ clipPath: 'inset(0 0 100% 0)' }}
+            whileInView={{ clipPath: 'inset(0 0 0% 0)' }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="relative min-h-[420px] overflow-hidden rounded-[2px] border border-white/10 bg-onyx-900"
+          >
+            <iframe
+              title="Map to Magic Cuts, 2779 Martin Rd, Dublin OH"
+              src={MAP_SRC}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 h-full w-full"
+              style={{ border: 0, filter: 'invert(0.89) hue-rotate(180deg) saturate(0.25) brightness(0.92) contrast(1.05)' }}
+            />
+            <a
+              href={shop.mapHref}
+              target="_blank"
+              rel="noreferrer"
+              className="absolute bottom-4 left-4 bg-onyx-950/90 px-4 py-2.5 font-mono text-xs text-bone/80 transition-colors hover:text-gold-300"
+            >
+              Open in Google Maps →
+            </a>
+          </motion.div>
         </div>
 
         {/* FAQ */}

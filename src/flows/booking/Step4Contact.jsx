@@ -30,40 +30,38 @@ export default function Step4Contact() {
 
   const next = () => { if (validate()) setContact(form) }
 
+  const rows = [
+    ['Service', service?.name],
+    ['Barber', barber?.name || 'Any available'],
+    ['Date', date ? format(new Date(date), 'EEE, MMM d') : ''],
+    ['Time', to12h(time)],
+    ['Price', `$${service?.price} ($11 deposit today)`],
+  ]
+
   return (
     <div>
-      <h1 className="font-display text-3xl text-bone">Your details</h1>
-      <p className="mt-2 text-bone/60">We'll confirm your booking by text and email.</p>
+      <h1 className="font-display text-5xl font-bold uppercase text-bone">Your details</h1>
+      <p className="mt-3 text-bone/60">We'll confirm your booking by text and email.</p>
 
-      {/* Booking summary */}
+      {/* Booking summary — a ruled ledger, not a box */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mt-6 rounded-2xl border border-gold-300/20 bg-gold-300/5 p-5"
+        className="mt-8"
       >
-        <p className="text-xs uppercase tracking-ultra text-gold-300/70">Your booking</p>
-        <div className="mt-3 grid grid-cols-2 gap-y-2 text-sm">
-          <span className="text-bone/50">Service</span>
-          <span className="text-bone">{service?.name}</span>
-          <span className="text-bone/50">Barber</span>
-          <span className="text-bone">{barber?.name || 'Any available'}</span>
-          <span className="text-bone/50">Date</span>
-          <span className="text-bone">{date ? format(new Date(date), 'EEE, MMM d') : '—'}</span>
-          <span className="text-bone/50">Time</span>
-          <span className="text-bone">{to12h(time)}</span>
-          <span className="text-bone/50">Price</span>
-          <span className="text-bone">
-            ${service?.price}{' '}
-            <span className="text-bone/50 text-xs">(${11} deposit today)</span>
-          </span>
-        </div>
+        {rows.map(([label, value]) => (
+          <div key={label} className="flex items-baseline justify-between border-t border-white/[0.08] py-2.5 last:border-b">
+            <span className="font-mono text-xs text-bone/45">{label.toLowerCase()}</span>
+            <span className="text-sm text-bone">{value}</span>
+          </div>
+        ))}
       </motion.div>
 
-      <div className="mt-8 space-y-5">
+      <div className="mt-10 space-y-6">
         <Field label="Full name" error={errors.name}>
           <input className="input" placeholder="John Smith" value={form.name} onChange={set('name')} />
         </Field>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <Field label="Email address" error={errors.email}>
             <input className="input" type="email" placeholder="you@email.com" value={form.email} onChange={set('email')} />
           </Field>
@@ -76,12 +74,12 @@ export default function Step4Contact() {
         </Field>
       </div>
 
-      <p className="mt-4 text-xs text-bone/40">
+      <p className="mt-5 font-mono text-xs text-bone/40">
         Your contact info is used only for your booking confirmation and reminders. We don't spam.
       </p>
 
-      <button onClick={next} className="btn-gold mt-6 w-full">
-        Continue to deposit →
+      <button onClick={next} className="btn-gold mt-8 w-full">
+        Continue to deposit
       </button>
     </div>
   )
@@ -90,9 +88,9 @@ export default function Step4Contact() {
 function Field({ label, error, children }) {
   return (
     <label className="block">
-      <span className="mb-1.5 flex items-center justify-between text-[0.65rem] font-semibold uppercase tracking-ultra text-bone/50">
-        {label}
-        {error && <span className="font-normal normal-case tracking-normal text-red-400">{error}</span>}
+      <span className="mb-2 flex items-center justify-between font-mono text-xs text-bone/50">
+        {label.toLowerCase()}
+        {error && <span className="text-red-400">{error}</span>}
       </span>
       {children}
     </label>
