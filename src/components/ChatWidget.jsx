@@ -36,7 +36,7 @@ export default function ChatWidget() {
       const data = await res.json()
       setMessages((prev) => [...prev, { role: 'assistant', content: data.reply || "I'm sorry, I couldn't process that. Please try again or call us directly." }])
     } catch {
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Connection issue — please try again or call us.' }])
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Connection issue. Please try again or call us.' }])
     }
     setLoading(false)
   }

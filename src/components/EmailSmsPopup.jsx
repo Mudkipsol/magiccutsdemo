@@ -117,7 +117,7 @@ export default function EmailSmsPopup() {
                     <Check size={22} />
                   </span>
                   <p id="popup-title" className="font-display text-xl text-bone">You're on the list.</p>
-                  <p className="text-sm text-bone/60">Deals, new products, and exclusive drops — straight to you.</p>
+                  <p className="text-sm text-bone/60">Deals, new products, and exclusive drops, straight to you.</p>
                 </div>
               ) : (
                 <>

@@ -38,7 +38,7 @@ export const barbers = [
     id: '22222222-2222-4222-8222-222222222222',
     name: 'Alejandro',
     title: 'Senior Barber',
-    bio: 'Detail work that goes beyond the cut — beard shaping, edge-ups, and fades built to your face.',
+    bio: 'Detail work past the cut itself: beard shaping, edge-ups, and fades built to your face.',
     specialties: ['Beard Sculpt', 'Edge-Up', 'Skin Fades'],
     photo: '/barbers/barber2.jpg',
   },
@@ -75,6 +75,8 @@ export const hours = [
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SERVICES — prices in USD. Deposit is $11 collected upfront via Stripe.
+// `note` is the menu annotation rendered inline after the name on the homepage.
+// `tag` stays for the booking wizard, which renders it as a badge.
 // ─────────────────────────────────────────────────────────────────────────────
 export const services = [
   {
@@ -84,6 +86,7 @@ export const services = [
     duration: '45 min',
     blurb: 'Precision scissor and clipper work, hot-towel finish, style that holds all week.',
     tag: 'Most booked',
+    note: 'the one most chairs ask for',
   },
   {
     id: 'fade',
@@ -99,6 +102,7 @@ export const services = [
     duration: '60 min',
     blurb: 'The full reset. Haircut and beard shaped so the whole thing reads together.',
     tag: 'Best value',
+    note: 'the full hour, best value',
   },
   {
     id: 'shave',
@@ -138,33 +142,22 @@ export const services = [
 ]
 
 // ─────────────────────────────────────────────────────────────────────────────
-// STATS, PROCESS, TESTIMONIALS
+// PROCESS, TESTIMONIALS
 // ─────────────────────────────────────────────────────────────────────────────
-export const stats = [
-  { value: 'Est. 2023', label: 'Dublin original' },
-  { value: '8',         label: 'Services on the menu' },
-  { value: '6 days',    label: 'Open every week' },
-  { value: 'Walk-ins',  label: 'Always welcome' },
-]
-
 export const process = [
   {
-    step: '01',
-    title: 'Sit & talk',
-    text: 'Every chair starts with a real consultation — your hair, your routine, what actually works.',
+    title: 'Sit and talk',
+    text: 'Every chair starts with a real consultation. Your hair, your routine, what actually works.',
   },
   {
-    step: '02',
     title: 'The work',
     text: 'Scissor-over-comb, clipper craft and straight-razor detail. Traditional technique, modern finish.',
   },
   {
-    step: '03',
     title: 'The finish',
     text: 'Hot towel, style, and product matched to your hair so you can do it again at home.',
   },
   {
-    step: '04',
     title: 'Walk out sharp',
     text: 'You leave looking like the best version of the photo in your head.',
   },
@@ -200,15 +193,15 @@ export const testimonials = [
 export const faqs = [
   {
     q: 'Do you take walk-ins?',
-    a: "Always. Walk-ins are welcome any day we're open — though booking guarantees your time and barber.",
+    a: "Always. Walk-ins are welcome any day we're open, though booking guarantees your time and your barber.",
   },
   {
     q: 'Why is there an $11 deposit?',
-    a: 'It secures your chair and goes toward the cost of your service. No-shows cost us real time — this keeps the schedule honest for everyone.',
+    a: 'It secures your chair and goes toward the cost of your service. No-shows cost us real time, and the deposit keeps the schedule honest for everyone.',
   },
   {
     q: "Do you cut kids' hair?",
-    a: 'Yes — our First Chair service is built for ages 8 and under, with the patience that takes.',
+    a: 'Yes. Our First Chair service is built for ages 8 and under, with the patience that takes.',
   },
   {
     q: 'Where are you located?',

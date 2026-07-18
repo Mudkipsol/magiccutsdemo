@@ -37,11 +37,17 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #b9882a;
   }
+
+  :focus-visible {
+    outline: 2px solid rgba(216, 178, 90, 0.7);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 }
 
-@keyframes btn-shimmer {
-  0%       { transform: translateX(-120%) skewX(-15deg); }
-  55%, 100% { transform: translateX(220%)  skewX(-15deg); }
+@keyframes pole-slide {
+  0%   { background-position: 0 0; }
+  100% { background-position: 24px 0; }
 }
 
 @layer components {
@@ -84,17 +90,6 @@
     background: linear-gradient(135deg, #e7cd8c, #c79a3a 55%, #9c6f20);
     box-shadow: 0 14px 34px -14px rgba(199, 154, 58, 0.7);
   }
-  .btn-gold::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-    animation: btn-shimmer 4s ease-in-out infinite;
-    pointer-events: none;
-  }
   .btn-gold:hover {
     transform: translateY(-2px);
     box-shadow: 0 22px 48px -16px rgba(199, 154, 58, 0.85);
@@ -134,6 +129,46 @@
       rgba(255, 255, 255, 0.035),
       rgba(255, 255, 255, 0) 45%
     );
+  }
+
+  /* Dotted price leader, the classic menu line between item and price */
+  .leader {
+    @apply relative flex-1 self-end;
+    min-width: 2rem;
+    border-bottom: 1.5px dotted rgba(244, 239, 230, 0.22);
+    margin-bottom: 0.45em;
+  }
+
+  /* Barber-pole stripe, the one piece of shop iconography we allow ourselves */
+  .pole {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(216, 178, 90, 0.85) 0 5px,
+      transparent 5px 12px,
+      rgba(244, 239, 230, 0.55) 12px 17px,
+      transparent 17px 24px
+    );
+    background-size: 34px 100%;
+    animation: pole-slide 2.6s linear infinite;
+  }
+
+  .text-link {
+    @apply relative inline-flex items-baseline gap-1 text-bone/80 transition-colors duration-150 hover:text-gold-300;
+  }
+  .text-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    opacity: 0.35;
+    transform-origin: left;
+    transition: opacity 150ms ease-out;
+  }
+  .text-link:hover::after {
+    opacity: 0.8;
   }
 }
 

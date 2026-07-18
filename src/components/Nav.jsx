@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Phone, LayoutDashboard, CalendarClock, User } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { shop } from '../data'
 import { useAuthStore } from '../store/authStore'
 
 const links = [
-  { href: '#services', label: 'Services' },
+  { href: '#services', label: 'The Menu' },
+  { href: '#team', label: 'Barbers' },
   { href: '#experience', label: 'The Shop' },
-  { href: '#process', label: 'How It Works' },
   { href: '#visit', label: 'Visit' },
 ]
 
@@ -16,10 +16,10 @@ const links = [
 function useAccountLink() {
   const { session, profile, loading } = useAuthStore()
   if (loading) return null
-  if (session && profile?.role === 'owner') return { to: '/dashboard', label: 'Owner Dashboard', icon: LayoutDashboard, prominent: true }
-  if (session && profile?.role === 'barber') return { to: '/barber', label: 'My Schedule', icon: CalendarClock }
-  if (session) return { to: '/account', label: 'My Account', icon: User }
-  return { to: '/account', label: 'Sign in', icon: User }
+  if (session && profile?.role === 'owner') return { to: '/dashboard', label: 'Owner Dashboard', prominent: true }
+  if (session && profile?.role === 'barber') return { to: '/barber', label: 'My Schedule' }
+  if (session) return { to: '/account', label: 'My Account' }
+  return { to: '/account', label: 'Sign in' }
 }
 
 export default function Nav() {
@@ -46,13 +46,8 @@ export default function Nav() {
         <nav className="shell flex h-[72px] items-center justify-between">
           <a href="#top" className="group flex items-center gap-3" aria-label="Magic Cuts home">
             <Logo />
-            <span className="flex flex-col leading-none">
-              <span className="font-display text-lg font-semibold tracking-wide text-bone">
-                Magic Cuts
-              </span>
-              <span className="text-[0.58rem] font-semibold uppercase tracking-ultra text-gold-300/80">
-                Dublin · Ohio
-              </span>
+            <span className="font-display text-lg font-semibold tracking-wide text-bone">
+              Magic Cuts
             </span>
           </a>
 
@@ -74,23 +69,20 @@ export default function Nav() {
               account.prominent ? (
                 <Link
                   to={account.to}
-                  className="flex items-center gap-2 rounded-full border border-gold-300/40 bg-gold-300/10 px-4 py-2 text-xs font-semibold text-gold-200 transition-colors hover:bg-gold-300/20"
+                  className="rounded-full border border-gold-300/40 bg-gold-300/10 px-4 py-2 text-xs font-semibold text-gold-200 transition-colors hover:bg-gold-300/20"
                 >
-                  <account.icon size={15} />
                   {account.label}
                 </Link>
               ) : (
                 <Link
                   to={account.to}
-                  className="flex items-center gap-1.5 text-sm font-medium text-bone/70 transition-colors hover:text-bone"
+                  className="text-sm font-medium text-bone/70 transition-colors hover:text-bone"
                 >
-                  <account.icon size={15} />
                   {account.label}
                 </Link>
               )
             )}
             <a href={shop.phoneHref} className="btn-ghost text-xs">
-              <Phone size={15} />
               {shop.phone}
             </a>
             <Link to="/book" className="btn-gold text-xs">
@@ -131,14 +123,14 @@ export default function Nav() {
                 <Link
                   to={account.to}
                   onClick={() => setOpen(false)}
-                  className={`flex items-center gap-2 rounded-lg px-3 py-3 text-base font-medium ${account.prominent ? 'text-gold-200' : 'text-bone/80'} hover:bg-white/5 hover:text-bone`}
+                  className={`rounded-lg px-3 py-3 text-base font-medium ${account.prominent ? 'text-gold-200' : 'text-bone/80'} hover:bg-white/5 hover:text-bone`}
                 >
-                  <account.icon size={17} /> {account.label}
+                  {account.label}
                 </Link>
               )}
               <div className="mt-3 flex gap-3">
                 <a href={shop.phoneHref} className="btn-ghost flex-1 text-xs">
-                  <Phone size={15} /> Call
+                  Call {shop.phone}
                 </a>
                 <Link to="/book" onClick={() => setOpen(false)} className="btn-gold flex-1 text-center text-xs">
                   Book a Chair

@@ -1,16 +1,20 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Phone, ArrowDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { shop, hours } from '../data'
 
-const rise = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, delay: 0.15 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
-  }),
-}
+// Each headline line rises out of its own overflow mask, then the supporting
+// copy follows. One choreographed moment, no per-element fade soup.
+const lineRise = (i) => ({
+  initial: { y: '110%' },
+  animate: { y: '0%' },
+  transition: { duration: 0.9, delay: 0.2 + i * 0.14, ease: [0.22, 1, 0.36, 1] },
+})
+
+const settle = (delay) => ({
+  initial: { opacity: 0, y: 14 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
+})
 
 function getTodayHours() {
   const day = new Date().getDay()
@@ -65,56 +69,45 @@ export default function Hero() {
 
       <div className="shell flex min-h-[100svh] items-center pt-28 pb-20">
         <div className="max-w-2xl">
-          <motion.p variants={rise} initial="hidden" animate="show" className="eyebrow">
-            <span className="h-px w-8 bg-gold-300/60" />
-            Est. {shop.established} · {shop.city}
-          </motion.p>
-
-          <motion.h1
-            variants={rise}
-            custom={1}
-            initial="hidden"
-            animate="show"
-            className="mt-6 font-display text-[clamp(3rem,8vw,6.2rem)] font-semibold leading-[0.95] tracking-[-0.02em] text-bone text-balance"
-          >
-            The cut that <span className="gold-text italic">earns</span> the
-            second look.
-          </motion.h1>
+          <h1 className="font-display text-[clamp(3rem,8vw,6.2rem)] font-semibold leading-[0.95] tracking-[-0.02em] text-bone">
+            <span className="block overflow-hidden pb-[0.08em]">
+              <motion.span className="block" {...lineRise(0)}>
+                The cut that
+              </motion.span>
+            </span>
+            <span className="block overflow-hidden pb-[0.08em]">
+              <motion.span className="block" {...lineRise(1)}>
+                <span className="gold-text italic">earns</span> the
+              </motion.span>
+            </span>
+            <span className="block overflow-hidden pb-[0.08em]">
+              <motion.span className="block" {...lineRise(2)}>
+                second look.
+              </motion.span>
+            </span>
+          </h1>
 
           <motion.p
-            variants={rise}
-            custom={2}
-            initial="hidden"
-            animate="show"
+            {...settle(0.75)}
             className="mt-7 max-w-xl text-lg leading-relaxed text-bone/65"
           >
-            Magic Cuts is Dublin's home for precision haircuts, beard work, and
-            straight-razor shaves. Every chair, every cut, every time — done the
-            right way.
+            Precision haircuts, beard work, and straight-razor shaves, cut in
+            Dublin, Ohio since 2023. Every chair, every visit, done the right
+            way.
           </motion.p>
 
-          <motion.div
-            variants={rise}
-            custom={3}
-            initial="hidden"
-            animate="show"
-            className="mt-9 flex flex-wrap items-center gap-4"
-          >
+          <motion.div {...settle(0.9)} className="mt-9 flex flex-wrap items-center gap-6">
             <button onClick={() => navigate('/book')} className="btn-gold">
               Book Your Chair
             </button>
-            <a href={shop.phoneHref} className="btn-ghost">
-              <Phone size={16} />
-              {shop.phone}
+            <a href={shop.phoneHref} className="text-link text-sm">
+              or call {shop.phone}
             </a>
           </motion.div>
 
           {/* Live status — the one dynamic detail worth surfacing, kept inline */}
           <motion.div
-            variants={rise}
-            custom={4}
-            initial="hidden"
-            animate="show"
+            {...settle(1.05)}
             className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-bone/55"
           >
             <span className="flex items-center gap-2 text-bone/75">
@@ -146,7 +139,7 @@ export default function Hero() {
         className="absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-ultra text-bone/40 transition-colors hover:text-gold-300 md:flex"
       >
         Explore
-        <ArrowDown size={16} className="opacity-60" />
+        <span aria-hidden="true" className="font-display text-base leading-none">↓</span>
       </a>
     </section>
   )

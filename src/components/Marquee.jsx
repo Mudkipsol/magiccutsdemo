@@ -1,5 +1,3 @@
-import { Sparkle } from './Icons'
-
 const items = [
   'Precision Cuts',
   'Straight-Razor Shaves',
@@ -19,7 +17,7 @@ export default function Marquee() {
         {row.map((t, i) => (
           <span key={i} className="flex items-center gap-10">
             <span className="font-display text-xl italic text-bone/80 transition-colors duration-300 group-hover:text-bone/60">{t}</span>
-            <Sparkle className="h-3.5 w-3.5 text-gold-300 transition-opacity duration-300 group-hover:opacity-50" />
+            <span aria-hidden="true" className="pole h-2.5 w-8 rounded-full opacity-60" />
           </span>
         ))}
       </div>
