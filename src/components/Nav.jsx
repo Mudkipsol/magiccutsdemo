@@ -5,11 +5,13 @@ import { Link } from 'react-router-dom'
 import { shop } from '../data'
 import { useAuthStore } from '../store/authStore'
 
+// Absolute-path hashes so the links also work from /gallery and other pages;
+// on the homepage the glide handler still intercepts them.
 const links = [
-  { href: '#services', label: 'The Menu' },
-  { href: '#team', label: 'Barbers' },
-  { href: '#experience', label: 'The Shop' },
-  { href: '#visit', label: 'Visit' },
+  { href: '/#services', label: 'The Menu' },
+  { href: '/#team', label: 'Barbers' },
+  { href: '/#experience', label: 'The Shop' },
+  { href: '/#visit', label: 'Visit' },
 ]
 
 // Resolve the account entry point from the current auth state.
@@ -72,7 +74,7 @@ export default function Nav() {
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-[2px] border border-white/15 text-bone lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-[2px] border border-white/15 text-bone lg:hidden"
           aria-label="Toggle menu"
         >
           {open ? <X size={18} /> : <Menu size={18} />}

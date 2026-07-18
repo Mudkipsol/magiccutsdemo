@@ -33,13 +33,13 @@ export default function Services() {
               viewport={{ once: true, margin: '-60px' }}
               className="group block w-full border-b border-white/[0.07] py-7 text-left first:border-t"
             >
-              <span className="flex items-baseline gap-5">
+              <span className="flex items-baseline justify-between gap-5">
                 <motion.span
                   variants={{
                     rest: { opacity: 0, y: 10 },
                     drawn: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.05 } },
                   }}
-                  className="font-display text-3xl font-bold uppercase text-bone transition-colors duration-150 group-hover:text-gold-200 sm:text-4xl"
+                  className="font-display text-2xl font-bold uppercase text-bone transition-colors duration-150 group-hover:text-gold-200 sm:text-4xl"
                 >
                   {s.name}
                 </motion.span>
@@ -62,7 +62,7 @@ export default function Services() {
                     rest: { scaleX: 0 },
                     drawn: { scaleX: 1, transition: { duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] } },
                   }}
-                  className="leader origin-left"
+                  className="leader hidden origin-left sm:block"
                 />
 
                 <motion.span
@@ -70,7 +70,7 @@ export default function Services() {
                     rest: { opacity: 0 },
                     drawn: { opacity: 1, transition: { duration: 0.4, delay: 0.7 } },
                   }}
-                  className="shrink-0 font-display text-3xl font-bold tabular-nums text-gold-300 sm:text-4xl"
+                  className="shrink-0 font-display text-2xl font-bold tabular-nums text-gold-300 sm:text-4xl"
                 >
                   ${s.price}
                 </motion.span>

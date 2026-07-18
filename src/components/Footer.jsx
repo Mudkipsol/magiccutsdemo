@@ -69,9 +69,9 @@ export default function Footer() {
             className="flex flex-col justify-between gap-10"
           >
             <ul className="space-y-2.5 font-display text-xl font-bold uppercase tracking-[0.06em] text-bone/60">
-              <li><a href="#services" className="transition-colors hover:text-gold-300">The Menu</a></li>
-              <li><a href="#team" className="transition-colors hover:text-gold-300">Barbers</a></li>
-              <li><a href="#experience" className="transition-colors hover:text-gold-300">The Shop</a></li>
+              <li><a href="/#services" className="transition-colors hover:text-gold-300">The Menu</a></li>
+              <li><a href="/#team" className="transition-colors hover:text-gold-300">Barbers</a></li>
+              <li><a href="/#experience" className="transition-colors hover:text-gold-300">The Shop</a></li>
               <li><Link to="/gallery" className="transition-colors hover:text-gold-300">Gallery</Link></li>
             </ul>
             <ul className="space-y-2 font-mono text-sm text-bone/55">

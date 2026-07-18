@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+﻿import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { format, subDays, parseISO } from 'date-fns'
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
@@ -587,7 +587,7 @@ function BarbersTab({ appointments }) {
     if (error || !data) { toast.error('Could not add barber'); return }
     setBarbers((prev) => [...prev, mapRow(data)])
     setEditing(data.id)
-    toast.success('Barber added — edit their details')
+    toast.success('Barber added. Edit their details')
   }
 
   const byBarber = {}
@@ -680,7 +680,7 @@ function BarberCard({ barber, stats, isEditing, saving, onEdit, onCancel, onSave
     const { data } = supabase.storage.from('barber-photos').getPublicUrl(path)
     setForm((f) => ({ ...f, photo: data.publicUrl }))
     setUploading(false)
-    toast.success('Photo uploaded — save to apply')
+    toast.success('Photo uploaded. Save to apply')
   }
 
   if (isEditing) {
@@ -775,7 +775,7 @@ function BarberLoginCreator({ barber }) {
   if (done) {
     return (
       <p className="mt-4 flex items-center gap-1.5 border-t border-white/[0.06] pt-3 text-xs text-green-400">
-        <CheckCircle size={12} /> Portal login created — share the credentials securely.
+        <CheckCircle size={12} /> Portal login created. Share the credentials securely.
       </p>
     )
   }
@@ -1009,7 +1009,7 @@ function ApprovalQueue() {
   if (!items.length) return (
     <div className="py-16 text-center">
       <CheckCircle size={32} className="mx-auto mb-3 text-green-400/50" />
-      <p className="text-bone/40">Queue is clear — no pending messages.</p>
+      <p className="text-bone/40">Queue is clear. No pending messages.</p>
     </div>
   )
 
@@ -1232,7 +1232,7 @@ function AgentSettings() {
         </div>
         {s.ai_kill_switch && (
           <p className="mt-3 rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400">
-            ⚠ Kill switch is ON — all AI outbound is paused.
+            ⚠ Kill switch is ON. All AI outbound is paused.
           </p>
         )}
       </div>

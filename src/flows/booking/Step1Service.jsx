@@ -20,8 +20,8 @@ export default function Step1Service() {
             onClick={() => setService(s)}
             className="group block w-full border-b border-white/[0.08] py-5 text-left transition-colors first:border-t hover:bg-onyx-900/50"
           >
-            <span className="flex items-baseline gap-4">
-              <span className="font-display text-2xl font-bold uppercase text-bone transition-colors duration-150 group-hover:text-gold-200 sm:text-3xl">
+            <span className="flex items-baseline justify-between gap-4">
+              <span className="font-display text-xl font-bold uppercase text-bone transition-colors duration-150 group-hover:text-gold-200 sm:text-3xl">
                 {s.name}
               </span>
               {s.tag && (
@@ -29,8 +29,8 @@ export default function Step1Service() {
                   {s.tag.toLowerCase()}
                 </span>
               )}
-              <span aria-hidden="true" className="leader" />
-              <span className="shrink-0 font-display text-2xl font-bold tabular-nums text-gold-300 sm:text-3xl">
+              <span aria-hidden="true" className="leader hidden sm:block" />
+              <span className="shrink-0 font-display text-xl font-bold tabular-nums text-gold-300 sm:text-3xl">
                 ${s.price}
               </span>
             </span>

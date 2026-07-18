@@ -1,16 +1,15 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ArrowLeft, ChevronLeft, ChevronRight, Instagram } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { shop, barbers } from '../data'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 
+// Captions come from the roster so names and titles can never drift from data.js
 const photos = [
   {
     src: '/shop-interior.webp',
     alt: 'Magic Cuts shop interior',
-    caption: 'The shop floor — where the work gets done.',
+    caption: 'The shop floor, where the work gets done.',
     span: 'col-span-2',
   },
   {
@@ -19,24 +18,12 @@ const photos = [
     caption: 'The full team.',
     span: '',
   },
-  {
-    src: '/barbers/barber1.jpg',
-    alt: 'Bashaar — Lead Barber',
-    caption: 'Bashaar · Lead Barber',
+  ...barbers.map((b) => ({
+    src: b.photo,
+    alt: `${b.name}, ${b.title}`,
+    caption: `${b.name} · ${b.title}`,
     span: '',
-  },
-  {
-    src: '/barbers/barber2.jpg',
-    alt: 'Alejandro — Senior Barber',
-    caption: 'Alejandro · Senior Barber',
-    span: '',
-  },
-  {
-    src: '/barbers/barber3.jpg',
-    alt: 'Bebo — Barber',
-    caption: 'Bebo · Barber',
-    span: '',
-  },
+  })),
 ]
 
 export default function GalleryPage() {
@@ -48,21 +35,17 @@ export default function GalleryPage() {
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-onyx-950 pt-28 pb-24">
+      <main className="min-h-screen bg-onyx-950 pt-32 pb-24 lg:pt-40">
         <div className="shell">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="eyebrow">
-              <span className="h-px w-8 bg-gold-300/60" />
-              The Shop
-            </p>
-            <h1 className="mt-4 font-display text-[clamp(2.4rem,5vw,4rem)] font-semibold leading-tight tracking-tight text-bone">
-              Inside Magic Cuts.
+            <h1 className="font-display text-[clamp(2.8rem,5.5vw,6rem)] font-bold uppercase leading-[0.92] text-bone">
+              Inside <span className="gold-text">Magic Cuts.</span>
             </h1>
-            <p className="mt-3 max-w-lg text-lg text-bone/55">
+            <p className="mt-5 max-w-lg text-lg text-bone/55">
               A look at the chairs, the craft, and the people behind every cut.
             </p>
           </motion.div>
@@ -75,7 +58,7 @@ export default function GalleryPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: i * 0.07 }}
                 onClick={() => setLightbox(i)}
-                className={`group relative overflow-hidden rounded-2xl bg-onyx-900 ${p.span} ${
+                className={`group relative overflow-hidden rounded-[2px] bg-onyx-900 ${p.span} ${
                   i === 0 ? 'aspect-video' : 'aspect-[3/4]'
                 }`}
                 aria-label={`View ${p.alt}`}
@@ -87,25 +70,26 @@ export default function GalleryPage() {
                   className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-onyx-950/70 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <p className="absolute bottom-0 left-0 right-0 translate-y-full p-4 text-sm font-medium text-bone transition-transform duration-300 group-hover:translate-y-0">
+                <p className="absolute bottom-0 left-0 right-0 translate-y-full p-4 text-left font-mono text-xs text-bone transition-transform duration-300 group-hover:translate-y-0">
                   {p.caption}
                 </p>
               </motion.button>
             ))}
           </div>
 
-          <div className="mt-14 flex flex-col items-center gap-4 rounded-3xl border border-gold-300/15 bg-gold-300/5 px-8 py-10 text-center">
-            <p className="font-display text-2xl text-bone">Follow for fresh cuts</p>
-            <p className="max-w-sm text-sm text-bone/55">
-              Real work, real clients, real results — posted regularly on Instagram.
-            </p>
+          <div className="mt-16 flex flex-col gap-6 border-t border-white/10 pt-10 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-display text-3xl font-bold uppercase text-bone">Follow for fresh cuts</p>
+              <p className="mt-2 max-w-sm text-sm text-bone/55">
+                Real work, real clients, real results, posted regularly.
+              </p>
+            </div>
             <a
               href={shop.instagram}
               target="_blank"
               rel="noreferrer"
-              className="btn-gold"
+              className="btn-gold shrink-0 self-start sm:self-auto"
             >
-              <Instagram size={16} />
               {shop.instagramHandle}
             </a>
           </div>
@@ -135,31 +119,31 @@ export default function GalleryPage() {
                 <img
                   src={photos[lightbox].src}
                   alt={photos[lightbox].alt}
-                  className="max-h-[80vh] max-w-full rounded-2xl object-contain"
+                  className="max-h-[80vh] max-w-full rounded-[2px] object-contain"
                 />
-                <p className="text-sm text-bone/60">{photos[lightbox].caption}</p>
+                <p className="font-mono text-xs text-bone/60">{photos[lightbox].caption}</p>
               </div>
 
               <button
                 onClick={(e) => { e.stopPropagation(); prev() }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-onyx-900/80 text-bone hover:border-gold-300/40 hover:text-gold-300"
+                className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-[2px] border border-white/15 bg-onyx-900/80 font-display text-2xl text-bone hover:border-gold-300/40 hover:text-gold-300 sm:left-4"
                 aria-label="Previous photo"
               >
-                <ChevronLeft size={20} />
+                ‹
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); next() }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-onyx-900/80 text-bone hover:border-gold-300/40 hover:text-gold-300"
+                className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-[2px] border border-white/15 bg-onyx-900/80 font-display text-2xl text-bone hover:border-gold-300/40 hover:text-gold-300 sm:right-4"
                 aria-label="Next photo"
               >
-                <ChevronRight size={20} />
+                ›
               </button>
               <button
                 onClick={() => setLightbox(null)}
-                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-onyx-900/80 text-bone hover:border-gold-300/40 hover:text-gold-300"
+                className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-[2px] border border-white/15 bg-onyx-900/80 font-display text-xl text-bone hover:border-gold-300/40 hover:text-gold-300 sm:right-4 sm:top-4"
                 aria-label="Close lightbox"
               >
-                <X size={16} />
+                ×
               </button>
             </motion.div>
           </>

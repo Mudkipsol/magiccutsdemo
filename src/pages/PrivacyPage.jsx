@@ -36,7 +36,7 @@ export default function PrivacyPage() {
           <p>
             <strong className="text-bone">Payment information:</strong> Deposits are processed
             by Stripe, Inc. We do not store your card number. Stripe's privacy policy governs
-            payment data — see <a href="https://stripe.com/privacy">stripe.com/privacy</a>.
+            payment data; see <a href="https://stripe.com/privacy">stripe.com/privacy</a>.
           </p>
           <p>
             <strong className="text-bone">Marketing opt-in:</strong> If you subscribe via our
@@ -51,7 +51,7 @@ export default function PrivacyPage() {
           <ul className="list-disc pl-5 space-y-1">
             <li>Send appointment confirmations and reminders</li>
             <li>Process your deposit via Stripe</li>
-            <li>Send marketing emails and SMS messages — only if you opted in</li>
+            <li>Send marketing emails and SMS messages, only if you opted in</li>
             <li>Request post-visit reviews (by SMS, approximately 2 hours after your appointment)</li>
             <li>Operate and improve the booking system</li>
           </ul>
@@ -74,10 +74,10 @@ export default function PrivacyPage() {
 
           <h2>Third-Party Services</h2>
           <ul className="list-disc pl-5 space-y-1">
-            <li><strong className="text-bone">Stripe</strong> — payment processing</li>
-            <li><strong className="text-bone">Twilio</strong> — SMS delivery</li>
-            <li><strong className="text-bone">Resend</strong> — transactional and marketing email</li>
-            <li><strong className="text-bone">Supabase</strong> — secure database hosting</li>
+            <li><strong className="text-bone">Stripe</strong> for payment processing</li>
+            <li><strong className="text-bone">Twilio</strong> for SMS delivery</li>
+            <li><strong className="text-bone">Resend</strong> for transactional and marketing email</li>
+            <li><strong className="text-bone">Supabase</strong> for secure database hosting</li>
           </ul>
           <p>Each provider has its own privacy policy governing how they handle data.</p>
 
