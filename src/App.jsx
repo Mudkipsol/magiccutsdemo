@@ -16,6 +16,7 @@ import ManageBookingPage from './pages/ManageBookingPage'
 import AccountPage from './pages/AccountPage'
 import NotFoundPage from './pages/NotFoundPage'
 import EmailSmsPopup from './components/EmailSmsPopup'
+import { installAnchorGlide } from './lib/glide'
 
 function ScrollProgress() {
   const { scrollYProgress } = useScroll()
@@ -77,6 +78,7 @@ function AppInner() {
 export default function App() {
   const init = useAuthStore((s) => s.init)
   useEffect(() => { init() }, [init])
+  useEffect(() => installAnchorGlide({ headerOffset: 96 }), [])
   return (
     <BrowserRouter>
       <ErrorBoundary>
