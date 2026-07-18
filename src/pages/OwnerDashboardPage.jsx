@@ -35,26 +35,28 @@ function OwnerLogin({ signIn }) {
     e.preventDefault()
     setBusy(true)
     const err = await signIn(email, pw)
-    if (err) toast.error('Invalid credentials')
+    if (err) toast.error(err.message || 'Invalid credentials')
     setBusy(false)
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-onyx-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-onyx-950 px-6">
       <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
-        <div className="mb-8 flex flex-col items-center gap-2 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-gold-300/30 bg-gold-300/10">
-            <BarChart2 size={24} className="text-gold-300" />
-          </div>
-          <p className="font-display text-2xl text-bone">Command Station</p>
-          <p className="text-sm text-bone/40">Magic Cuts · Owner Access</p>
-        </div>
-        <form onSubmit={submit} className="card space-y-4 p-7">
-          <input className="input" type="email" placeholder="owner@magicutsalon.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input className="input" type="password" placeholder="••••••••" value={pw} onChange={(e) => setPw(e.target.value)} required />
-          <button type="submit" disabled={busy} className="btn-gold w-full">{busy ? 'Signing in…' : 'Access Dashboard'}</button>
+        <img src="/logo-full.png" alt="Magic Cuts Barbershop" className="mx-auto w-44 select-none" />
+        <h1 className="mt-10 text-center font-display text-4xl font-bold uppercase text-bone">Command Station</h1>
+        <p className="mt-2 text-center font-mono text-xs text-bone/45">owner access</p>
+        <form onSubmit={submit} className="mt-10 space-y-5">
+          <label className="block">
+            <span className="mb-2 block font-mono text-xs text-bone/50">email</span>
+            <input className="input" type="email" placeholder="owner@magicutsalon.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </label>
+          <label className="block">
+            <span className="mb-2 block font-mono text-xs text-bone/50">password</span>
+            <input className="input" type="password" placeholder="••••••••" value={pw} onChange={(e) => setPw(e.target.value)} required />
+          </label>
+          <button type="submit" disabled={busy} className="btn-gold w-full disabled:opacity-60">{busy ? 'Signing in…' : 'Access Dashboard'}</button>
         </form>
-        <Link to="/" className="mt-5 block text-center text-sm text-bone/30 hover:text-bone">← Back to site</Link>
+        <Link to="/" className="mt-8 block text-center font-mono text-xs text-bone/40 transition-colors hover:text-bone">← Back to site</Link>
       </motion.div>
     </div>
   )

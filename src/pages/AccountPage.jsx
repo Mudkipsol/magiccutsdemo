@@ -2,13 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
-import {
-  ArrowLeft, LogOut, Calendar, Clock, Scissors,
-  LayoutDashboard, CalendarClock, Mail,
-} from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { supabase } from '../lib/supabase'
-import { Sparkle } from '../components/Icons'
 import toast from 'react-hot-toast'
 
 function to12h(t) {
@@ -25,16 +20,17 @@ export default function AccountPage() {
   return (
     <div className="min-h-screen bg-onyx-950">
       <header className="border-b border-white/10">
-        <div className="shell flex h-[64px] items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-sm text-bone/60 hover:text-bone">
-            <ArrowLeft size={16} /> Back to site
+        <div className="shell flex h-16 items-center justify-between">
+          <Link to="/" className="font-mono text-sm text-bone/60 transition-colors hover:text-bone">
+            ← Back to site
           </Link>
-          <span className="flex items-center gap-2 font-display text-lg text-bone">
-            <Sparkle className="h-4 w-4 text-gold-300" /> Magic Cuts
+          <span className="flex items-center gap-3">
+            <img src="/logo-mark.png" alt="" className="h-8 w-auto -translate-y-[2px]" />
+            <span className="font-display text-xl font-bold uppercase leading-none text-bone translate-y-[1px]">Magic Cuts</span>
           </span>
           {session ? (
-            <button onClick={signOut} className="flex items-center gap-1.5 text-sm text-bone/50 hover:text-bone">
-              <LogOut size={14} /> Sign out
+            <button onClick={signOut} className="font-mono text-sm text-bone/50 transition-colors hover:text-bone">
+              Sign out
             </button>
           ) : (
             <span className="w-[88px]" />
@@ -42,13 +38,13 @@ export default function AccountPage() {
         </div>
       </header>
 
-      <main className="shell max-w-3xl py-12">
+      <main className="shell max-w-3xl py-14">
         {!session ? (
           <AuthForms />
         ) : profile?.role === 'owner' ? (
-          <StaffRedirect to="/dashboard" label="Owner Dashboard" icon={LayoutDashboard} />
+          <StaffRedirect to="/dashboard" label="Owner Dashboard" />
         ) : profile?.role === 'barber' ? (
-          <StaffRedirect to="/barber" label="My Schedule" icon={CalendarClock} />
+          <StaffRedirect to="/barber" label="My Schedule" />
         ) : (
           <MyBookings session={session} />
         )}
@@ -87,15 +83,13 @@ function AuthForms() {
   if (sentConfirm) {
     return (
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-sm text-center">
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-gold-300/30 bg-gold-300/10">
-          <Mail size={24} className="text-gold-300" />
-        </div>
-        <h1 className="font-display text-2xl text-bone">Check your inbox</h1>
-        <p className="mt-3 text-sm text-bone/60">
+        <img src="/logo-mark.png" alt="" className="mx-auto h-16 w-auto select-none" />
+        <h1 className="mt-8 font-display text-4xl font-bold uppercase text-bone">Check your inbox</h1>
+        <p className="mt-4 text-sm leading-relaxed text-bone/60">
           We sent a confirmation link to <span className="text-bone">{email}</span>. Click it to
           finish setting up your account, then come back and sign in.
         </p>
-        <button onClick={() => { setSentConfirm(false); setMode('login') }} className="btn-ghost mt-6">
+        <button onClick={() => { setSentConfirm(false); setMode('login') }} className="btn-ghost mt-8">
           Back to sign in
         </button>
       </motion.div>
@@ -104,61 +98,65 @@ function AuthForms() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-sm">
-      <div className="mb-8 text-center">
-        <h1 className="font-display text-3xl text-bone">
-          {mode === 'login' ? 'Welcome back' : 'Create your account'}
-        </h1>
-        <p className="mt-2 text-sm text-bone/50">
-          {mode === 'login'
-            ? 'Sign in to view and manage your appointments.'
-            : 'Track your bookings and breeze through checkout next time.'}
-        </p>
-      </div>
+      <img src="/logo-full.png" alt="Magic Cuts Barbershop" className="mx-auto w-44 select-none" />
 
-      <div className="mb-6 flex rounded-xl border border-white/10 p-1">
+      <h1 className="mt-10 text-center font-display text-4xl font-bold uppercase text-bone">
+        {mode === 'login' ? 'Welcome back' : 'Take a seat'}
+      </h1>
+      <p className="mt-3 text-center text-sm text-bone/50">
+        {mode === 'login'
+          ? 'Sign in to view and manage your appointments.'
+          : 'Track your bookings and breeze through checkout next time.'}
+      </p>
+
+      {/* Mode switch — flat ruled tabs, same language as the booking steps */}
+      <div className="mt-9 flex border-b border-white/10">
         {['login', 'register'].map((m) => (
           <button
             key={m}
             onClick={() => setMode(m)}
-            className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all ${mode === m ? 'bg-gold-300/15 text-gold-200' : 'text-bone/50 hover:text-bone'}`}
+            className={`relative flex-1 pb-3 font-display text-base font-bold uppercase tracking-[0.1em] transition-colors ${
+              mode === m ? 'text-bone' : 'text-bone/35 hover:text-bone/70'
+            }`}
           >
             {m === 'login' ? 'Sign in' : 'Register'}
+            {mode === m && <span className="absolute inset-x-0 bottom-[-1px] h-[2px] bg-gold-400" />}
           </button>
         ))}
       </div>
 
-      <form onSubmit={submit} className="card space-y-4 p-7">
+      <form onSubmit={submit} className="mt-8 space-y-5">
         {mode === 'register' && (
-          <input className="input" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
+          <label className="block">
+            <span className="mb-2 block font-mono text-xs text-bone/50">full name</span>
+            <input className="input" placeholder="John Smith" value={name} onChange={(e) => setName(e.target.value)} required />
+          </label>
         )}
-        <input className="input" type="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input className="input" type="password" placeholder="••••••••" value={pw} onChange={(e) => setPw(e.target.value)} required minLength={mode === 'register' ? 8 : undefined} />
-        <button type="submit" disabled={busy} className="btn-gold w-full">
+        <label className="block">
+          <span className="mb-2 block font-mono text-xs text-bone/50">email</span>
+          <input className="input" type="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </label>
+        <label className="block">
+          <span className="mb-2 block font-mono text-xs text-bone/50">password</span>
+          <input className="input" type="password" placeholder="••••••••" value={pw} onChange={(e) => setPw(e.target.value)} required minLength={mode === 'register' ? 8 : undefined} />
+        </label>
+        <button type="submit" disabled={busy} className="btn-gold w-full disabled:opacity-60">
           {busy ? 'Just a moment…' : mode === 'login' ? 'Sign in' : 'Create account'}
         </button>
       </form>
-
-      <p className="mt-5 text-center text-sm text-bone/40">
-        {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
-        <button onClick={() => setMode(mode === 'login' ? 'register' : 'login')} className="text-gold-300 hover:underline">
-          {mode === 'login' ? 'Register' : 'Sign in'}
-        </button>
-      </p>
     </motion.div>
   )
 }
 
 // ─── Staff shortcut (owner/barber landing here) ───────────────────────────────
-function StaffRedirect({ to, label, icon: Icon }) {
+function StaffRedirect({ to, label }) {
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-sm text-center">
-      <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-gold-300/30 bg-gold-300/10">
-        <Icon size={24} className="text-gold-300" />
-      </div>
-      <h1 className="font-display text-2xl text-bone">You're signed in</h1>
-      <p className="mt-2 text-sm text-bone/50">Head to your workspace to keep going.</p>
-      <Link to={to} className="btn-gold mt-6 inline-flex">
-        <Icon size={15} /> Open {label}
+      <img src="/logo-mark.png" alt="" className="mx-auto h-16 w-auto select-none" />
+      <h1 className="mt-8 font-display text-4xl font-bold uppercase text-bone">You're signed in</h1>
+      <p className="mt-3 font-mono text-sm text-bone/50">Head to your workspace to keep going.</p>
+      <Link to={to} className="btn-gold mt-8 inline-flex">
+        Open {label}
       </Link>
     </motion.div>
   )
@@ -191,27 +189,23 @@ function MyBookings({ session }) {
 
   return (
     <div>
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="eyebrow text-[0.6rem]">Your account</p>
-          <h1 className="font-display text-3xl text-bone">Hey, {firstName}.</h1>
-        </div>
-        <Link to="/book" className="btn-gold text-xs">Book a Chair</Link>
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+        <h1 className="font-display text-5xl font-bold uppercase text-bone">Hey, {firstName}.</h1>
+        <Link to="/book" className="btn-gold text-sm">Book a Chair</Link>
       </div>
 
       {loading ? (
-        <p className="py-16 text-center text-bone/40">Loading your appointments…</p>
+        <p className="py-16 text-center font-mono text-sm text-bone/40">Loading your appointments…</p>
       ) : appts.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/10 py-16 text-center">
-          <Calendar className="mx-auto h-8 w-8 text-bone/20" />
-          <p className="mt-3 text-bone/50">No appointments yet.</p>
-          <p className="mt-1 text-sm text-bone/30">
-            Bookings made with <span className="text-bone/50">{session.user.email}</span> will show up here.
+        <div className="border-y border-white/10 py-16 text-center">
+          <p className="font-display text-2xl font-bold uppercase text-bone/60">No appointments yet</p>
+          <p className="mt-2 font-mono text-xs text-bone/40">
+            Bookings made with {session.user.email} will show up here.
           </p>
-          <Link to="/book" className="btn-gold mt-6 inline-flex text-xs">Book your first cut</Link>
+          <Link to="/book" className="btn-gold mt-8 inline-flex text-sm">Book your first cut</Link>
         </div>
       ) : (
-        <div className="space-y-10">
+        <div className="space-y-12">
           <Section title="Upcoming" items={upcoming} empty="No upcoming appointments." />
           <Section title="Past visits" items={past} empty="No past visits yet." muted />
         </div>
@@ -223,11 +217,11 @@ function MyBookings({ session }) {
 function Section({ title, items, empty, muted }) {
   return (
     <div>
-      <p className="mb-3 eyebrow text-[0.6rem]">{title}</p>
+      <h2 className="mb-4 font-display text-2xl font-bold uppercase text-bone/80">{title}</h2>
       {items.length === 0 ? (
-        <p className="text-sm text-bone/30">{empty}</p>
+        <p className="font-mono text-sm text-bone/30">{empty}</p>
       ) : (
-        <div className="space-y-2">
+        <div>
           {items.map((a) => <BookingRow key={a.id} a={a} muted={muted} />)}
         </div>
       )}
@@ -244,24 +238,16 @@ function BookingRow({ a, muted }) {
     no_show: 'text-amber-400',
   }
   return (
-    <div className={`card grid grid-cols-1 gap-3 p-4 text-sm sm:grid-cols-[1.3fr_1fr_auto] ${muted ? 'opacity-70' : ''}`}>
-      <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 text-gold-300">
-          <Scissors size={15} />
-        </span>
-        <div>
-          <p className="font-medium text-bone">{a.service_name}</p>
-          <p className="text-xs text-bone/50">${a.service_price}{a.deposit_paid ? ' · $11 deposit paid' : ''}</p>
-        </div>
+    <div className={`grid grid-cols-1 gap-2 border-t border-white/[0.08] py-4 last:border-b sm:grid-cols-[1.3fr_1fr_auto] sm:items-baseline ${muted ? 'opacity-70' : ''}`}>
+      <div>
+        <p className="font-display text-xl font-bold uppercase text-bone">{a.service_name}</p>
+        <p className="font-mono text-xs text-bone/50">${a.service_price}{a.deposit_paid ? ' · $11 deposit paid' : ''}</p>
       </div>
-      <div className="flex flex-col justify-center gap-0.5">
-        <span className="flex items-center gap-1.5 text-bone/70"><Calendar size={12} /> {format(parseISO(a.appointment_date + 'T12:00:00'), 'EEE, MMM d, yyyy')}</span>
-        <span className="flex items-center gap-1.5 text-bone/50"><Clock size={12} /> {to12h(a.appointment_time)}</span>
+      <div className="font-mono text-sm text-bone/60">
+        {format(parseISO(a.appointment_date + 'T12:00:00'), 'EEE, MMM d, yyyy')} · {to12h(a.appointment_time)}
       </div>
-      <div className="flex items-center justify-end">
-        <span className={`text-[0.6rem] font-semibold uppercase tracking-widest ${statusColor[a.status] || 'text-bone/40'}`}>
-          {a.status?.replace('_', '-')}
-        </span>
+      <div className={`font-mono text-xs uppercase tracking-widest sm:text-right ${statusColor[a.status] || 'text-bone/40'}`}>
+        {a.status?.replace('_', '-')}
       </div>
     </div>
   )
@@ -270,7 +256,7 @@ function BookingRow({ a, muted }) {
 function Loader() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-onyx-950">
-      <Sparkle className="h-8 w-8 animate-pulse text-gold-300" />
+      <img src="/logo-mark.png" alt="" className="h-12 w-auto animate-pulse select-none" />
     </div>
   )
 }

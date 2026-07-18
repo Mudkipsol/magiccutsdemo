@@ -37,32 +37,30 @@ function BarberLogin({ signIn }) {
     e.preventDefault()
     setBusy(true)
     const err = await signIn(email, pw)
-    if (err) toast.error('Wrong email or password')
+    if (err) toast.error(err.message || 'Wrong email or password')
     setBusy(false)
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-onyx-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-onyx-950 px-6">
       <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
-        <div className="mb-8 flex flex-col items-center gap-2 text-center">
-          <Sparkle className="h-8 w-8 text-gold-300" />
-          <p className="font-display text-2xl text-bone">Barber Portal</p>
-          <p className="text-sm text-bone/50">Magic Cuts Salon</p>
-        </div>
-        <form onSubmit={submit} className="card space-y-4 p-7">
+        <img src="/logo-full.png" alt="Magic Cuts Barbershop" className="mx-auto w-44 select-none" />
+        <h1 className="mt-10 text-center font-display text-4xl font-bold uppercase text-bone">Barber Portal</h1>
+        <p className="mt-2 text-center font-mono text-xs text-bone/45">staff access</p>
+        <form onSubmit={submit} className="mt-10 space-y-5">
           <label className="block">
-            <span className="text-[0.65rem] font-semibold uppercase tracking-ultra text-bone/50">Email</span>
-            <input className="input mt-1.5" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="barber@magicutsalon.com" required />
+            <span className="mb-2 block font-mono text-xs text-bone/50">email</span>
+            <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="barber@magicutsalon.com" required />
           </label>
           <label className="block">
-            <span className="text-[0.65rem] font-semibold uppercase tracking-ultra text-bone/50">Password</span>
-            <input className="input mt-1.5" type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="••••••••" required />
+            <span className="mb-2 block font-mono text-xs text-bone/50">password</span>
+            <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="••••••••" required />
           </label>
-          <button type="submit" disabled={busy} className="btn-gold w-full">
+          <button type="submit" disabled={busy} className="btn-gold w-full disabled:opacity-60">
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
-        <Link to="/" className="mt-6 block text-center text-sm text-bone/40 hover:text-bone">← Back to website</Link>
+        <Link to="/" className="mt-8 block text-center font-mono text-xs text-bone/40 transition-colors hover:text-bone">← Back to website</Link>
       </motion.div>
     </div>
   )

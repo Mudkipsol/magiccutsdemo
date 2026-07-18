@@ -35,6 +35,7 @@ export const useAuthStore = create((set) => ({
   },
 
   signIn: async (email, password) => {
+    if (!supabase) return { message: 'Demo mode: add Supabase keys to .env.local to enable sign-in.' }
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     return error
   },
@@ -42,6 +43,7 @@ export const useAuthStore = create((set) => ({
   // Customer self-registration. Staff (owner/barber) are created by the owner,
   // never through this path. Returns { error, needsConfirm }.
   signUp: async (email, password, name) => {
+    if (!supabase) return { error: { message: 'Demo mode: add Supabase keys to .env.local to enable accounts.' }, needsConfirm: false }
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
