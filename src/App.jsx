@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { motion, AnimatePresence, useScroll } from 'framer-motion'
+import { motion, useScroll } from 'framer-motion'
 import { useAuthStore } from './store/authStore'
 import ErrorBoundary from './components/ErrorBoundary'
 import HomePage from './pages/HomePage'
@@ -33,6 +33,13 @@ function ScrollProgress() {
 
 function AppInner() {
   const location = useLocation()
+
+  // New page, top of page. Without this, deep scroll positions carry across
+  // routes (footer -> /book landed mid-page).
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [location.pathname])
+
   return (
     <div className="grain relative">
       <ScrollProgress />
@@ -46,31 +53,21 @@ function AppInner() {
           },
         }}
       />
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={location.pathname}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
-        >
-          <Routes location={location}>
-            <Route path="/" element={<><HomePage /><EmailSmsPopup /></>} />
-            <Route path="/book" element={<BookingPage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/unsubscribe" element={<UnsubscribePage />} />
-            <Route path="/manage" element={<ManageBookingPage />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="/login" element={<AccountPage />} />
-            <Route path="/register" element={<AccountPage />} />
-            <Route path="/barber" element={<BarberPortalPage />} />
-            <Route path="/dashboard" element={<OwnerDashboardPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </motion.div>
-      </AnimatePresence>
+      <Routes location={location}>
+        <Route path="/" element={<><HomePage /><EmailSmsPopup /></>} />
+        <Route path="/book" element={<BookingPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/unsubscribe" element={<UnsubscribePage />} />
+        <Route path="/manage" element={<ManageBookingPage />} />
+        <Route path="/account" element={<AccountPage />} />
+        <Route path="/login" element={<AccountPage />} />
+        <Route path="/register" element={<AccountPage />} />
+        <Route path="/barber" element={<BarberPortalPage />} />
+        <Route path="/dashboard" element={<OwnerDashboardPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </div>
   )
 }
