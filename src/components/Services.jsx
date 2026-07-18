@@ -31,8 +31,19 @@ export default function Services() {
               initial="rest"
               whileInView="drawn"
               viewport={{ once: true, margin: '-60px' }}
-              className="group block w-full border-b border-white/[0.07] py-7 text-left first:border-t"
+              className="group relative block w-full py-7 text-left transition-colors active:bg-onyx-900/50 sm:border-b sm:border-white/[0.07] sm:first:border-t sm:active:bg-transparent"
             >
+              {/* On phones the leader has no room beside the name, so the
+                  dotted line draws itself as the row's own rule instead. */}
+              <motion.span
+                aria-hidden="true"
+                variants={{
+                  rest: { scaleX: 0 },
+                  drawn: { scaleX: 1, transition: { duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                className="absolute inset-x-0 bottom-0 origin-left sm:hidden"
+                style={{ borderBottom: '1.5px dotted rgba(244, 239, 230, 0.22)' }}
+              />
               <span className="flex items-baseline justify-between gap-5">
                 <motion.span
                   variants={{

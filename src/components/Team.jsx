@@ -127,39 +127,46 @@ export default function Team() {
           </motion.div>
         </div>
 
-        {/* Mobile roster: portraits stacked, no hover dependency */}
-        <div className="mt-12 flex flex-col gap-12 lg:hidden">
-          {barbers.map((b) => (
-            <motion.div
-              key={b.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="overflow-hidden rounded-[2px] bg-onyx-900">
-                <img
-                  src={b.photo}
-                  alt={b.name}
-                  loading="lazy"
-                  className="aspect-[4/5] w-full object-cover object-top"
-                />
-              </div>
-              <p className="mt-5 flex items-baseline gap-3">
-                <span className="font-display text-4xl font-bold uppercase text-bone">{b.name}</span>
-                <span className="font-mono text-xs text-gold-300">{b.title.toLowerCase()}</span>
-              </p>
-              <p className="mt-2 text-base leading-relaxed text-bone/60">
-                {b.bio} {specialtiesSentence(b)}
-              </p>
-              <button
-                onClick={() => navigate(`/book?barber=${b.id}`)}
-                className="text-link mt-3 text-sm text-gold-300"
+        {/* Mobile roster: a swipeable rail, portraits wipe in as they arrive */}
+        <div className="mt-12 lg:hidden">
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {barbers.map((b, i) => (
+              <motion.div
+                key={b.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.55, delay: i === 0 ? 0.05 : 0, ease: [0.22, 1, 0.36, 1] }}
+                className="w-[82%] shrink-0 snap-center"
               >
-                Book with {b.name} →
-              </button>
-            </motion.div>
-          ))}
+                <div className="relative overflow-hidden rounded-[2px] bg-onyx-900">
+                  <motion.img
+                    src={b.photo}
+                    alt={b.name}
+                    initial={{ clipPath: 'inset(0 100% 0 0)', scale: 1.05 }}
+                    whileInView={{ clipPath: 'inset(0 0% 0 0)', scale: 1 }}
+                    viewport={{ once: true, margin: '-30px' }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    className="aspect-[3/4] w-full object-cover object-top"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-onyx-950/90 via-onyx-950/40 to-transparent p-4 pt-14">
+                    <p className="font-display text-3xl font-bold uppercase leading-none text-bone">{b.name}</p>
+                    <p className="mt-1 font-mono text-xs text-gold-300">{b.title.toLowerCase()}</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-bone/60">
+                  {b.bio} {specialtiesSentence(b)}
+                </p>
+                <button
+                  onClick={() => navigate(`/book?barber=${b.id}`)}
+                  className="text-link mt-3 text-sm text-gold-300"
+                >
+                  Book with {b.name} →
+                </button>
+              </motion.div>
+            ))}
+          </div>
+          <p className="mt-3 font-mono text-[11px] text-bone/35">swipe for the full roster →</p>
         </div>
       </div>
     </section>

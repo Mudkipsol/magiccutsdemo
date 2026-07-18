@@ -79,9 +79,10 @@
     @apply border-t border-white/[0.07];
   }
 
-  /* Poster buttons: sharp, flat, type-led. No gradients, no shadows, no lift. */
+  /* Poster buttons: sharp, flat, type-led. No gradients, no shadows, no lift.
+     The press scale is the tap feedback on touch. */
   .btn {
-    @apply relative inline-flex items-center justify-center gap-3 rounded-[2px] px-8 py-4 font-display text-base font-bold uppercase tracking-[0.1em] transition-colors duration-150;
+    @apply relative inline-flex items-center justify-center gap-3 rounded-[2px] px-8 py-4 font-display text-base font-bold uppercase tracking-[0.1em] transition duration-150 active:scale-[0.97];
   }
 
   .btn-gold {

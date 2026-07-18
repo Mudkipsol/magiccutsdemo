@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { hours, shop, faqs } from '../data'
@@ -8,6 +8,15 @@ const todayIdx = (new Date().getDay() + 6) % 7 // Mon=0
 const MAP_SRC = 'https://www.google.com/maps?q=2779+Martin+Rd,+Dublin,+OH+43017&output=embed'
 
 export default function Visit() {
+  // Mount the map iframe ourselves when the panel scrolls into view.
+  // Native loading="lazy" on an iframe inside an animated container proved
+  // unreliable (the request never fired on some devices). The timer is a
+  // belt-and-suspenders fallback in case the viewport observer never fires.
+  const [mapLive, setMapLive] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setMapLive(true), 3000)
+    return () => clearTimeout(t)
+  }, [])
   return (
     <section id="visit" className="relative border-t border-white/10 bg-onyx-900/40 py-24 sm:py-32">
       <div className="shell">
@@ -57,7 +66,7 @@ export default function Visit() {
                 </a>
               </div>
 
-              {/* Hours ledger */}
+              {/* Hours ledger — each rule draws itself in */}
               <div className="mt-10">
                 {hours.map((h, i) => {
                   const closed = h.open === 'Closed'
@@ -65,11 +74,16 @@ export default function Visit() {
                   return (
                     <div
                       key={h.day}
-                      className="relative flex items-baseline justify-between border-t border-white/[0.08] py-3"
+                      className="relative flex items-baseline justify-between py-3"
                     >
-                      {today && (
-                        <span aria-hidden="true" className="absolute inset-x-0 top-[-1px] h-px bg-gold-300/60" />
-                      )}
+                      <motion.span
+                        aria-hidden="true"
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: true, margin: '-40px' }}
+                        transition={{ duration: 0.7, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                        className={`absolute inset-x-0 top-0 h-px origin-left ${today ? 'bg-gold-300/60' : 'bg-white/[0.08]'}`}
+                      />
                       <span className={`font-display text-xl font-bold uppercase ${today ? 'text-gold-200' : 'text-bone/70'}`}>
                         {h.day}
                         {today && <span className="ml-3 font-mono text-xs font-normal normal-case text-gold-300/70">today</span>}
@@ -92,18 +106,25 @@ export default function Visit() {
           <motion.div
             initial={{ clipPath: 'inset(0 0 100% 0)' }}
             whileInView={{ clipPath: 'inset(0 0 0% 0)' }}
-            viewport={{ once: true, margin: '-80px' }}
+            onViewportEnter={() => setMapLive(true)}
+            viewport={{ once: true, margin: '100px 0px' }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="relative min-h-[420px] overflow-hidden rounded-[2px] border border-white/10 bg-onyx-900"
           >
-            <iframe
-              title="Map to Magic Cuts, 2779 Martin Rd, Dublin OH"
-              src={MAP_SRC}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="absolute inset-0 h-full w-full"
-              style={{ border: 0, filter: 'invert(0.89) hue-rotate(180deg) saturate(0.25) brightness(0.92) contrast(1.05)' }}
-            />
+            {mapLive ? (
+              <iframe
+                title="Map to Magic Cuts, 2779 Martin Rd, Dublin OH"
+                src={MAP_SRC}
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 h-full w-full"
+                style={{ border: 0, filter: 'invert(0.89) hue-rotate(180deg) saturate(0.25) brightness(0.92) contrast(1.05)' }}
+              />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                <p className="font-mono text-xs tracking-widest text-gold-300/50">40.1028° N · 83.1421° W</p>
+                <p className="font-mono text-xs text-bone/35">loading map…</p>
+              </div>
+            )}
             <a
               href={shop.mapHref}
               target="_blank"
