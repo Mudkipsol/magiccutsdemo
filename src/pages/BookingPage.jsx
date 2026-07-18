@@ -53,7 +53,7 @@ export default function BookingPage() {
             ← Back to site
           </Link>
           <span className="flex items-center gap-3">
-            <span aria-hidden="true" className="pole h-6 w-2 rounded-full" />
+            <img src="/logo-mark.png" alt="" className="h-8 w-auto" />
             <span className="font-display text-xl font-bold uppercase text-bone">Magic Cuts</span>
           </span>
           <span className="font-mono text-xs text-bone/40">Step {step} of 6</span>

@@ -30,7 +30,7 @@ export default function Nav() {
     <header className="fixed inset-x-0 top-0 z-50 bg-onyx-950 border-b border-white/10">
       <nav className="shell flex h-20 items-center justify-between lg:h-24">
         <a href="#top" className="flex items-center gap-4" aria-label="Magic Cuts home">
-          <span aria-hidden="true" className="pole h-9 w-3 rounded-full" />
+          <img src="/logo-mark.png" alt="" className="h-11 w-auto lg:h-12" />
           <span className="font-display text-3xl font-bold uppercase tracking-[0.05em] text-bone lg:text-4xl">
             Magic Cuts
           </span>
