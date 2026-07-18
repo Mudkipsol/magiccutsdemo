@@ -9,48 +9,52 @@ export default function Services() {
 
   return (
     <section id="services" className="relative py-24 sm:py-32">
-      <div className="shell">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
-            <h2 className="font-display text-[clamp(2.2rem,5vw,3.6rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-bone text-balance">
-              Every service, done <span className="gold-text italic">properly.</span>
-            </h2>
-            <p className="mt-5 text-lg leading-relaxed text-bone/60">
-              Pricing is honest and up front. Pick your service, book your
-              chair, come in ready.
-            </p>
-          </div>
-          <button onClick={() => navigate('/book')} className="text-link shrink-0 text-sm">
-            Book any service →
+      <div className="shell grid grid-cols-1 gap-14 lg:grid-cols-[1fr_1.9fr] lg:gap-24">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <h2 className="font-display text-[clamp(2.8rem,5.5vw,6rem)] font-bold uppercase leading-[0.92] text-bone">
+            Every service, done <span className="gold-text">properly.</span>
+          </h2>
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-bone/60">
+            Pricing is honest and up front. Pick your service, book your
+            chair, come in ready.
+          </p>
+          <button onClick={() => navigate('/book')} className="btn-ghost mt-8">
+            Book any service
           </button>
         </div>
 
-        <div className="mt-14 mx-auto max-w-3xl">
-          {services.map((s, i) => (
+        <div>
+          {services.map((s) => (
             <motion.button
               key={s.id}
               onClick={() => navigate('/book')}
               initial="rest"
               whileInView="drawn"
-              whileHover="hover"
               viewport={{ once: true, margin: '-60px' }}
-              className="group block w-full border-b border-white/[0.07] py-6 text-left"
+              className="group block w-full border-b border-white/[0.07] py-7 text-left first:border-t"
             >
-              <span className="flex items-baseline gap-4">
+              <span className="flex items-baseline gap-5">
                 <motion.span
                   variants={{
                     rest: { opacity: 0, y: 10 },
                     drawn: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.05 } },
                   }}
-                  className="font-display text-xl text-bone transition-colors duration-150 group-hover:text-gold-200 sm:text-2xl"
+                  className="font-display text-3xl font-bold uppercase text-bone transition-colors duration-150 group-hover:text-gold-200 sm:text-4xl"
                 >
                   {s.name}
-                  {s.note && (
-                    <em className="ml-3 hidden font-display text-sm font-normal text-gold-300/70 sm:inline">
-                      {s.note}
-                    </em>
-                  )}
                 </motion.span>
+
+                {s.note && (
+                  <motion.span
+                    variants={{
+                      rest: { opacity: 0 },
+                      drawn: { opacity: 1, transition: { duration: 0.4, delay: 0.3 } },
+                    }}
+                    className="hidden font-mono text-xs text-gold-300/70 md:inline"
+                  >
+                    {s.note}
+                  </motion.span>
+                )}
 
                 <motion.span
                   aria-hidden="true"
@@ -64,25 +68,25 @@ export default function Services() {
                 <motion.span
                   variants={{
                     rest: { opacity: 0 },
-                    drawn: { opacity: 1, transition: { duration: 0.4, delay: 0.75 } },
+                    drawn: { opacity: 1, transition: { duration: 0.4, delay: 0.7 } },
                   }}
-                  className="shrink-0 font-display text-2xl tabular-nums text-gold-300"
+                  className="shrink-0 font-display text-3xl font-bold tabular-nums text-gold-300 sm:text-4xl"
                 >
                   ${s.price}
                 </motion.span>
               </span>
 
-              <span className="mt-1.5 block max-w-xl pr-10 text-sm leading-relaxed text-bone/50">
+              <span className="mt-2 block max-w-2xl pr-10 text-base leading-relaxed text-bone/50">
                 {s.blurb} About {s.duration.replace('min', 'minutes')} in the chair.
               </span>
             </motion.button>
           ))}
-        </div>
 
-        <p className="mx-auto mt-6 max-w-3xl text-sm text-bone/35">
-          Prices start from. Final pricing confirmed in the chair based on
-          length and detail.
-        </p>
+          <p className="mt-6 text-sm text-bone/35">
+            Prices start from. Final pricing confirmed in the chair based on
+            length and detail.
+          </p>
+        </div>
       </div>
     </section>
   )

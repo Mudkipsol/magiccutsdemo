@@ -24,30 +24,20 @@ export default function Team() {
   const barber = barbers[active]
 
   return (
-    <section id="team" className="relative py-24 sm:py-32">
-      <div
-        className="absolute inset-x-0 top-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(199,154,58,0.3), transparent)' }}
-      />
-
+    <section id="team" className="relative border-t border-white/10 py-24 sm:py-32">
       <div className="shell">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
-            <h2 className="font-display text-[clamp(2.2rem,5vw,3.6rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-bone text-balance">
-              Your chair, your <span className="gold-text italic">barber.</span>
-            </h2>
-            <p className="mt-5 text-lg leading-relaxed text-bone/60">
-              Pick who you want before you walk in. Every barber here has a
-              specialty and a chair with your name on it.
-            </p>
-          </div>
-          <button onClick={() => navigate('/book')} className="btn-gold shrink-0">
-            Book Your Barber
-          </button>
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <h2 className="max-w-3xl font-display text-[clamp(2.8rem,5.5vw,6rem)] font-bold uppercase leading-[0.92] text-bone">
+            Your chair, your <span className="gold-text">barber.</span>
+          </h2>
+          <p className="max-w-sm text-lg leading-relaxed text-bone/60">
+            Pick who you want before you walk in. Every barber here has a
+            specialty and a chair with your name on it.
+          </p>
         </div>
 
         {/* Desktop roster: names select, portrait answers */}
-        <div className="mt-16 hidden gap-16 lg:grid lg:grid-cols-[1.1fr_1fr]">
+        <div className="mt-16 hidden gap-24 lg:grid lg:grid-cols-[1.4fr_1fr]">
           <div className="flex flex-col justify-center">
             {barbers.map((b, i) => (
               <button
@@ -55,7 +45,7 @@ export default function Team() {
                 onMouseEnter={() => setActive(i)}
                 onFocus={() => setActive(i)}
                 onClick={() => navigate(`/book?barber=${b.id}`)}
-                className="group relative border-b border-white/[0.07] py-6 text-left"
+                className="group relative border-b border-white/[0.07] py-5 text-left"
               >
                 <motion.span
                   initial={{ opacity: 0, y: 18 }}
@@ -65,14 +55,16 @@ export default function Team() {
                   className="flex items-baseline justify-between"
                 >
                   <span
-                    className={`font-display text-[clamp(2.2rem,3.5vw,3.4rem)] leading-none transition-colors duration-200 ${
-                      active === i ? 'italic text-bone' : 'text-bone/30 group-hover:text-bone/60'
+                    className={`font-display text-[clamp(3rem,5vw,5.5rem)] font-bold uppercase leading-none transition-all duration-200 ${
+                      active === i
+                        ? 'translate-x-3 text-bone'
+                        : 'text-bone/25 group-hover:text-bone/60'
                     }`}
                   >
                     {b.name}
                   </span>
                   <span
-                    className={`font-display text-sm italic transition-colors duration-200 ${
+                    className={`font-mono text-xs transition-colors duration-200 ${
                       active === i ? 'text-gold-300' : 'text-bone/25'
                     }`}
                   >
@@ -98,14 +90,14 @@ export default function Team() {
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <p className="max-w-md text-base leading-relaxed text-bone/60">
+                  <p className="max-w-lg text-base leading-relaxed text-bone/60">
                     {barber.bio} {specialtiesSentence(barber)}
                   </p>
                   <button
                     onClick={() => navigate(`/book?barber=${barber.id}`)}
-                    className="text-link mt-4 text-sm text-gold-300"
+                    className="btn-gold mt-6"
                   >
-                    Book with {barber.name} →
+                    Book with {barber.name}
                   </button>
                 </motion.div>
               </AnimatePresence>
@@ -117,7 +109,7 @@ export default function Team() {
             whileInView={{ clipPath: 'inset(0% 0 0 0)' }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-onyx-900"
+            className="relative aspect-[3/4] overflow-hidden rounded-[2px] bg-onyx-900"
           >
             <AnimatePresence initial={false}>
               <motion.img
@@ -137,7 +129,7 @@ export default function Team() {
 
         {/* Mobile roster: portraits stacked, no hover dependency */}
         <div className="mt-12 flex flex-col gap-12 lg:hidden">
-          {barbers.map((b, i) => (
+          {barbers.map((b) => (
             <motion.div
               key={b.id}
               initial={{ opacity: 0, y: 24 }}
@@ -145,7 +137,7 @@ export default function Team() {
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="overflow-hidden rounded-2xl bg-onyx-900">
+              <div className="overflow-hidden rounded-[2px] bg-onyx-900">
                 <img
                   src={b.photo}
                   alt={b.name}
@@ -153,9 +145,9 @@ export default function Team() {
                   className="aspect-[4/5] w-full object-cover object-top"
                 />
               </div>
-              <p className="mt-5 font-display text-3xl text-bone">
-                {b.name}
-                <em className="ml-3 text-sm font-normal text-gold-300">{b.title.toLowerCase()}</em>
+              <p className="mt-5 flex items-baseline gap-3">
+                <span className="font-display text-4xl font-bold uppercase text-bone">{b.name}</span>
+                <span className="font-mono text-xs text-gold-300">{b.title.toLowerCase()}</span>
               </p>
               <p className="mt-2 text-base leading-relaxed text-bone/60">
                 {b.bio} {specialtiesSentence(b)}

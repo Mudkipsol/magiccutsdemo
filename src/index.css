@@ -52,7 +52,7 @@
 
 @layer components {
   .shell {
-    @apply mx-auto w-full max-w-shell px-6 sm:px-8 lg:px-12;
+    @apply mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-12 xl:px-16;
   }
 
   .eyebrow {
@@ -80,29 +80,23 @@
     @apply border-t border-white/[0.07];
   }
 
+  /* Poster buttons: sharp, flat, type-led. No gradients, no shadows, no lift. */
   .btn {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 font-sans text-sm font-semibold tracking-wide transition-all duration-300 ease-out;
+    @apply relative inline-flex items-center justify-center gap-3 rounded-[2px] px-8 py-4 font-display text-base font-bold uppercase tracking-[0.1em] transition-colors duration-150;
   }
 
   .btn-gold {
-    @apply btn text-onyx-950;
-    overflow: hidden;
-    background: linear-gradient(135deg, #e7cd8c, #c79a3a 55%, #9c6f20);
-    box-shadow: 0 14px 34px -14px rgba(199, 154, 58, 0.7);
+    @apply btn bg-gold-400 text-onyx-950;
   }
   .btn-gold:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 22px 48px -16px rgba(199, 154, 58, 0.85);
+    @apply bg-bone;
   }
 
   .btn-ghost {
-    @apply btn border border-white/15 text-bone/90;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(6px);
+    @apply btn border border-white/25 text-bone;
   }
   .btn-ghost:hover {
-    @apply border-gold-300/60 text-bone;
-    background: rgba(199, 154, 58, 0.08);
+    @apply border-gold-300 text-gold-200;
   }
 
   .input {

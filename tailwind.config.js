@@ -27,14 +27,15 @@ export default {
         ash: '#9a958c',
       },
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
-        sans: ['Manrope', 'system-ui', 'sans-serif'],
+        display: ['"Big Shoulders Display"', 'Impact', 'sans-serif'],
+        sans: ['Archivo', 'system-ui', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       letterSpacing: {
         ultra: '0.32em',
       },
       maxWidth: {
-        shell: '1240px',
+        shell: '1720px',
       },
       boxShadow: {
         gold: '0 18px 60px -20px rgba(199, 154, 58, 0.45)',

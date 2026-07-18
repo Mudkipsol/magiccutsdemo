@@ -12,12 +12,12 @@ const items = [
 export default function Marquee() {
   const row = [...items, ...items]
   return (
-    <div className="group relative overflow-hidden border-y border-white/10 bg-onyx-900/60 py-5 cursor-default select-none">
-      <div className="flex w-max animate-marquee items-center gap-10 whitespace-nowrap group-hover:[animation-play-state:paused]">
+    <div className="group relative overflow-hidden border-y border-white/10 bg-onyx-900/60 py-6 cursor-default select-none">
+      <div className="flex w-max animate-marquee items-center gap-12 whitespace-nowrap group-hover:[animation-play-state:paused]">
         {row.map((t, i) => (
-          <span key={i} className="flex items-center gap-10">
-            <span className="font-display text-xl italic text-bone/80 transition-colors duration-300 group-hover:text-bone/60">{t}</span>
-            <span aria-hidden="true" className="pole h-2.5 w-8 rounded-full opacity-60" />
+          <span key={i} className="flex items-center gap-12">
+            <span className="font-display text-3xl font-bold uppercase tracking-[0.02em] text-bone/75 transition-colors duration-300 group-hover:text-bone/50">{t}</span>
+            <span aria-hidden="true" className="pole h-3 w-10 rounded-full opacity-60" />
           </span>
         ))}
       </div>

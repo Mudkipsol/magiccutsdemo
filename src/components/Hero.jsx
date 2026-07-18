@@ -2,12 +2,12 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { shop, hours } from '../data'
 
-// Each headline line rises out of its own overflow mask, then the supporting
-// copy follows. One choreographed moment, no per-element fade soup.
+// Headline lines rise out of their own overflow masks. One choreographed
+// moment at poster scale, then the supporting row settles underneath.
 const lineRise = (i) => ({
   initial: { y: '110%' },
   animate: { y: '0%' },
-  transition: { duration: 0.9, delay: 0.2 + i * 0.14, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 0.9, delay: 0.15 + i * 0.13, ease: [0.22, 1, 0.36, 1] },
 })
 
 const settle = (delay) => ({
@@ -32,12 +32,11 @@ export default function Hero() {
   const imgY = useTransform(scrollY, [0, 700], ['0%', '14%'])
 
   return (
-    <section id="top" className="relative min-h-[100svh] overflow-hidden">
+    <section id="top" className="relative flex min-h-[100svh] flex-col overflow-hidden">
       {/* layered background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-onyx-950" />
 
-        {/* Shop interior — Ken Burns slow zoom + scroll parallax */}
         <motion.img
           src="/shop-interior.webp"
           alt=""
@@ -53,94 +52,75 @@ export default function Hero() {
           transition={{ duration: 22, ease: 'linear' }}
         />
 
-        {/* Legibility gradients — anchor text on the left, let the photo breathe right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950 via-onyx-950/80 to-onyx-950/25" />
-        <div className="absolute inset-0 bg-gradient-to-t from-onyx-950 via-transparent to-onyx-950/55" />
-
-        {/* Gold ambient glow */}
-        <div
-          className="absolute inset-0 opacity-[0.35] mix-blend-screen"
-          style={{
-            background:
-              'radial-gradient(110% 80% at 85% -10%, rgba(199,154,58,0.18), transparent 55%), radial-gradient(80% 60% at 0% 100%, rgba(31,95,176,0.07), transparent 60%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-t from-onyx-950 via-onyx-950/55 to-onyx-950/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950/85 via-onyx-950/35 to-transparent" />
       </div>
 
-      <div className="shell flex min-h-[100svh] items-center pt-28 pb-20">
-        <div className="max-w-2xl">
-          <h1 className="font-display text-[clamp(3rem,8vw,6.2rem)] font-semibold leading-[0.95] tracking-[-0.02em] text-bone">
-            <span className="block overflow-hidden pb-[0.08em]">
-              <motion.span className="block" {...lineRise(0)}>
-                The cut that
-              </motion.span>
-            </span>
-            <span className="block overflow-hidden pb-[0.08em]">
-              <motion.span className="block" {...lineRise(1)}>
-                <span className="gold-text italic">earns</span> the
-              </motion.span>
-            </span>
-            <span className="block overflow-hidden pb-[0.08em]">
-              <motion.span className="block" {...lineRise(2)}>
-                second look.
-              </motion.span>
-            </span>
-          </h1>
+      <div className="shell flex flex-1 flex-col justify-end pb-16 pt-32">
+        <h1 className="font-display text-[clamp(3.4rem,11vw,12.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.01em] text-bone">
+          <span className="block overflow-hidden">
+            <motion.span className="block" {...lineRise(0)}>
+              The cut that
+            </motion.span>
+          </span>
+          <span className="block overflow-hidden">
+            <motion.span className="block" {...lineRise(1)}>
+              <span className="gold-text">earns</span> the
+            </motion.span>
+          </span>
+          <span className="block overflow-hidden">
+            <motion.span className="block" {...lineRise(2)}>
+              second look.
+            </motion.span>
+          </span>
+        </h1>
 
-          <motion.p
-            {...settle(0.75)}
-            className="mt-7 max-w-xl text-lg leading-relaxed text-bone/65"
-          >
+        <motion.div
+          {...settle(0.8)}
+          className="mt-10 flex flex-col gap-8 border-t border-white/15 pt-8 lg:flex-row lg:items-end lg:justify-between"
+        >
+          <p className="max-w-xl text-lg leading-relaxed text-bone/70">
             Precision haircuts, beard work, and straight-razor shaves, cut in
             Dublin, Ohio since 2023. Every chair, every visit, done the right
             way.
-          </motion.p>
+          </p>
 
-          <motion.div {...settle(0.9)} className="mt-9 flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center gap-6">
+            <a href={shop.phoneHref} className="text-link font-mono text-sm">
+              {shop.phone}
+            </a>
             <button onClick={() => navigate('/book')} className="btn-gold">
               Book Your Chair
             </button>
-            <a href={shop.phoneHref} className="text-link text-sm">
-              or call {shop.phone}
-            </a>
-          </motion.div>
+          </div>
+        </motion.div>
 
-          {/* Live status — the one dynamic detail worth surfacing, kept inline */}
-          <motion.div
-            {...settle(1.05)}
-            className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-bone/55"
-          >
-            <span className="flex items-center gap-2 text-bone/75">
-              <span className="relative flex h-1.5 w-1.5 shrink-0">
-                {isOpen && (
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-300 opacity-50" />
-                )}
-                <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${isOpen ? 'bg-gold-300' : 'bg-bone/30'}`} />
-              </span>
-              {isOpen ? `Open till ${today.close} PM` : 'Closed today'}
+        <motion.div
+          {...settle(0.95)}
+          className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-bone/50"
+        >
+          <span className="flex items-center gap-2 text-bone/75">
+            <span className="relative flex h-1.5 w-1.5 shrink-0">
+              {isOpen && (
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-300 opacity-50" />
+              )}
+              <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${isOpen ? 'bg-gold-300' : 'bg-bone/30'}`} />
             </span>
-            <span className="h-3 w-px bg-white/20" />
-            <a
-              href={shop.mapHref}
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-gold-300"
-            >
-              {shop.address}, Dublin OH
-            </a>
-            <span className="h-3 w-px bg-white/20" />
-            <span>Walk-ins always welcome</span>
-          </motion.div>
-        </div>
+            {isOpen ? `Open till ${today.close} PM` : 'Closed today'}
+          </span>
+          <span aria-hidden="true" className="text-bone/25">/</span>
+          <a
+            href={shop.mapHref}
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors hover:text-gold-300"
+          >
+            {shop.address}, Dublin OH
+          </a>
+          <span aria-hidden="true" className="text-bone/25">/</span>
+          <span>Walk-ins always welcome</span>
+        </motion.div>
       </div>
-
-      <a
-        href="#services"
-        className="absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-ultra text-bone/40 transition-colors hover:text-gold-300 md:flex"
-      >
-        Explore
-        <span aria-hidden="true" className="font-display text-base leading-none">↓</span>
-      </a>
     </section>
   )
 }

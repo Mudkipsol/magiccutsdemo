@@ -3,8 +3,8 @@ import { shop } from '../data'
 
 export default function Experience() {
   return (
-    <section id="experience" className="relative overflow-hidden py-24 sm:py-32">
-      <div className="shell grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+    <section id="experience" className="relative overflow-hidden border-t border-white/10 py-24 sm:py-32">
+      <div className="shell grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_1.15fr] lg:gap-24">
         {/* Visual panel — shop group photo, revealed like a curtain pull */}
         <motion.div
           initial={{ clipPath: 'inset(0 100% 0 0)' }}
@@ -13,7 +13,7 @@ export default function Experience() {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="order-2 lg:order-1"
         >
-          <div className="relative overflow-hidden rounded-3xl bg-onyx-950 aspect-[4/5]">
+          <div className="relative overflow-hidden rounded-[2px] bg-onyx-950 aspect-[4/5]">
             <img
               src="/shop-group.jpg"
               alt="The Magic Cuts team inside the shop"
@@ -32,9 +32,9 @@ export default function Experience() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-[clamp(2.2rem,4.5vw,3.4rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-bone text-balance"
+            className="font-display text-[clamp(2.8rem,5vw,5.5rem)] font-bold uppercase leading-[0.92] text-bone"
           >
-            A barbershop built on <span className="gold-text italic">craft</span>, not churn.
+            Built on <span className="gold-text">craft,</span> not churn.
           </motion.h2>
 
           <motion.div
@@ -42,7 +42,7 @@ export default function Experience() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-6 space-y-4 text-lg leading-relaxed text-bone/65"
+            className="mt-7 max-w-2xl space-y-4 text-lg leading-relaxed text-bone/65"
           >
             <p>
               Magic Cuts opened with one idea: bring real barbering back to{' '}
@@ -59,14 +59,14 @@ export default function Experience() {
           </motion.div>
 
           {/* One number, given real weight. Not a stat grid. */}
-          <div className="mt-12 border-t border-white/[0.08] pt-8">
+          <div className="mt-14 border-t border-white/[0.08] pt-8">
             <span className="block overflow-hidden">
               <motion.span
                 initial={{ y: '105%' }}
                 whileInView={{ y: '0%' }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="gold-text block font-display text-[clamp(4.5rem,9vw,7.5rem)] font-semibold leading-[0.9]"
+                className="gold-text block font-display text-[clamp(6rem,13vw,12rem)] font-bold leading-[0.85]"
               >
                 2023
               </motion.span>
@@ -76,7 +76,7 @@ export default function Experience() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-4 max-w-md text-base leading-relaxed text-bone/55"
+              className="mt-5 max-w-md text-base leading-relaxed text-bone/55"
             >
               The year Dublin got a proper barbershop back. Eight services on
               the menu, six days a week, and walk-ins welcome since the day

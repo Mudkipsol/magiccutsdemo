@@ -14,24 +14,25 @@ export default function Process() {
   return (
     <section id="process" className="relative border-y border-white/10 py-24 sm:py-32">
       <div className="shell">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1fr_2fr] lg:gap-24 lg:items-start">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1.1fr_1.6fr] lg:gap-28 lg:items-start">
           {/* Left: heading column */}
-          <div className="lg:sticky lg:top-32">
+          <div className="lg:sticky lg:top-28">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-[clamp(2.2rem,5vw,3.4rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-bone text-balance"
+              className="font-display text-[clamp(2.8rem,5.5vw,6rem)] font-bold uppercase leading-[0.92] text-bone"
             >
-              Same routine.<br />Every visit.
+              Same routine.<br />
+              <span className="gold-text">Every visit.</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 text-base leading-relaxed text-bone/55"
+              className="mt-6 max-w-md text-lg leading-relaxed text-bone/55"
             >
               Whether it's your first visit or your fortieth, the routine does
               not change. Consistency is what makes the cut repeatable.
@@ -39,7 +40,7 @@ export default function Process() {
           </div>
 
           {/* Right: the ritual, strung on one drawn line */}
-          <div ref={listRef} className="relative pl-10">
+          <div ref={listRef} className="relative pl-10 sm:pl-14">
             <span aria-hidden="true" className="absolute inset-y-2 left-0 w-px bg-white/[0.08]" />
             <motion.span
               aria-hidden="true"
@@ -54,10 +55,10 @@ export default function Process() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.6, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                className="border-b border-white/[0.07] py-9 last:border-b-0"
+                className="border-b border-white/[0.07] py-10 last:border-b-0"
               >
-                <h3 className="font-display text-2xl text-bone">{p.title}</h3>
-                <p className="mt-2 max-w-xl text-base leading-relaxed text-bone/55">{p.text}</p>
+                <h3 className="font-display text-3xl font-bold uppercase text-bone sm:text-4xl">{p.title}</h3>
+                <p className="mt-3 max-w-xl text-lg leading-relaxed text-bone/55">{p.text}</p>
               </motion.div>
             ))}
           </div>

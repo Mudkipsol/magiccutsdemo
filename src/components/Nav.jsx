@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { shop } from '../data'
+import { shop, hours } from '../data'
 import { useAuthStore } from '../store/authStore'
 
 const links = [
@@ -22,6 +22,13 @@ function useAccountLink() {
   return { to: '/account', label: 'Sign in' }
 }
 
+function todayLine() {
+  const day = new Date().getDay()
+  const idx = day === 0 ? 6 : day - 1
+  const t = hours[idx]
+  return t.open === 'Closed' ? 'Closed today' : `Open today ${t.open} – ${t.close}`
+}
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -37,62 +44,63 @@ export default function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div
-        className={`backdrop-blur-xl backdrop-saturate-150 transition-all duration-500 ${
-          scrolled
-            ? 'border-b border-white/10 bg-onyx-950/55'
-            : 'border-b border-white/[0.06] bg-white/[0.03]'
+        className={`transition-colors duration-300 ${
+          scrolled ? 'bg-onyx-950/90 backdrop-blur-md' : 'bg-transparent'
         }`}
       >
-        <nav className="shell flex h-[72px] items-center justify-between">
-          <a href="#top" className="group flex items-center gap-3" aria-label="Magic Cuts home">
-            <Logo />
-            <span className="font-display text-lg font-semibold tracking-wide text-bone">
+        {/* Utility line — real shop facts, not decoration */}
+        <div className="hidden border-b border-white/[0.07] md:block">
+          <div className="shell flex h-8 items-center justify-between font-mono text-[11px] text-bone/45">
+            <span>{shop.address}, {shop.addressLine2}</span>
+            <span className="flex items-center gap-5">
+              <span>{todayLine()}</span>
+              <a href={shop.phoneHref} className="transition-colors hover:text-gold-300">
+                {shop.phone}
+              </a>
+            </span>
+          </div>
+        </div>
+
+        <nav className={`shell flex h-16 items-center justify-between border-b transition-colors duration-300 ${scrolled ? 'border-white/10' : 'border-white/[0.07]'}`}>
+          <a href="#top" className="flex items-center gap-3" aria-label="Magic Cuts home">
+            <span aria-hidden="true" className="pole h-7 w-2.5 rounded-full" />
+            <span className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-bone">
               Magic Cuts
             </span>
           </a>
 
-          <div className="hidden items-center gap-9 lg:flex">
+          <div className="hidden items-center gap-10 lg:flex">
             {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
-                className="group relative text-sm font-medium text-bone/70 transition-colors hover:text-bone"
+                className="group relative font-display text-base font-bold uppercase tracking-[0.1em] text-bone/60 transition-colors hover:text-bone"
               >
                 {l.label}
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-gold-300 transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-gold-300 transition-all duration-200 group-hover:w-full" />
               </a>
             ))}
           </div>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden items-center gap-6 lg:flex">
             {account && (
-              account.prominent ? (
-                <Link
-                  to={account.to}
-                  className="rounded-full border border-gold-300/40 bg-gold-300/10 px-4 py-2 text-xs font-semibold text-gold-200 transition-colors hover:bg-gold-300/20"
-                >
-                  {account.label}
-                </Link>
-              ) : (
-                <Link
-                  to={account.to}
-                  className="text-sm font-medium text-bone/70 transition-colors hover:text-bone"
-                >
-                  {account.label}
-                </Link>
-              )
+              <Link
+                to={account.to}
+                className={`font-display text-base font-bold uppercase tracking-[0.1em] transition-colors ${
+                  account.prominent ? 'text-gold-300 hover:text-gold-200' : 'text-bone/60 hover:text-bone'
+                }`}
+              >
+                {account.label}
+              </Link>
             )}
-            <a href={shop.phoneHref} className="btn-ghost text-xs">
-              {shop.phone}
-            </a>
-            <Link to="/book" className="btn-gold text-xs">
+            <Link to="/book" className="btn-gold !px-6 !py-3 text-sm">
               Book a Chair
             </Link>
           </div>
 
           <button
             onClick={() => setOpen((v) => !v)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-bone lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-[2px] border border-white/15 text-bone lg:hidden"
             aria-label="Toggle menu"
           >
             {open ? <X size={18} /> : <Menu size={18} />}
@@ -108,13 +116,13 @@ export default function Nav() {
             exit={{ opacity: 0, y: -12 }}
             className="border-b border-white/10 bg-onyx-950/95 backdrop-blur-xl lg:hidden"
           >
-            <div className="shell flex flex-col gap-1 py-5">
+            <div className="shell flex flex-col py-6">
               {links.map((l) => (
                 <a
                   key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-3 text-base font-medium text-bone/80 hover:bg-white/5 hover:text-bone"
+                  className="border-b border-white/[0.06] py-4 font-display text-3xl font-bold uppercase text-bone/85 hover:text-gold-200"
                 >
                   {l.label}
                 </a>
@@ -123,16 +131,16 @@ export default function Nav() {
                 <Link
                   to={account.to}
                   onClick={() => setOpen(false)}
-                  className={`rounded-lg px-3 py-3 text-base font-medium ${account.prominent ? 'text-gold-200' : 'text-bone/80'} hover:bg-white/5 hover:text-bone`}
+                  className={`border-b border-white/[0.06] py-4 font-display text-3xl font-bold uppercase ${account.prominent ? 'text-gold-300' : 'text-bone/85'} hover:text-gold-200`}
                 >
                   {account.label}
                 </Link>
               )}
-              <div className="mt-3 flex gap-3">
-                <a href={shop.phoneHref} className="btn-ghost flex-1 text-xs">
+              <div className="mt-6 flex gap-3">
+                <a href={shop.phoneHref} className="btn-ghost flex-1 text-sm">
                   Call {shop.phone}
                 </a>
-                <Link to="/book" onClick={() => setOpen(false)} className="btn-gold flex-1 text-center text-xs">
+                <Link to="/book" onClick={() => setOpen(false)} className="btn-gold flex-1 text-center text-sm">
                   Book a Chair
                 </Link>
               </div>
@@ -141,33 +149,5 @@ export default function Nav() {
         )}
       </AnimatePresence>
     </header>
-  )
-}
-
-function Logo() {
-  return (
-    <span className="relative flex h-10 w-10 items-center justify-center">
-      <svg viewBox="0 0 40 40" className="h-10 w-10">
-        <defs>
-          <linearGradient id="navg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#f3e6c2" />
-            <stop offset="0.55" stopColor="#c79a3a" />
-            <stop offset="1" stopColor="#9c6f20" />
-          </linearGradient>
-        </defs>
-        <circle cx="20" cy="20" r="18.5" fill="none" stroke="url(#navg)" strokeWidth="1.4" />
-        <text
-          x="20"
-          y="26"
-          textAnchor="middle"
-          fontFamily="Fraunces, serif"
-          fontSize="19"
-          fontWeight="700"
-          fill="url(#navg)"
-        >
-          M
-        </text>
-      </svg>
-    </span>
   )
 }
