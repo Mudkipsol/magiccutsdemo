@@ -1,22 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { hours, shop, faqs } from '../data'
 
 const todayIdx = (new Date().getDay() + 6) % 7 // Mon=0
 
-const MAP_SRC = 'https://www.google.com/maps?q=2779+Martin+Rd,+Dublin,+OH+43017&output=embed'
-
 export default function Visit() {
-  // Mount the map iframe ourselves when the panel scrolls into view.
-  // Native loading="lazy" on an iframe inside an animated container proved
-  // unreliable (the request never fired on some devices). The timer is a
-  // belt-and-suspenders fallback in case the viewport observer never fires.
-  const [mapLive, setMapLive] = useState(false)
-  useEffect(() => {
-    const t = setTimeout(() => setMapLive(true), 3000)
-    return () => clearTimeout(t)
-  }, [])
   return (
     <section id="visit" className="relative border-t border-white/10 bg-onyx-900/40 py-24 sm:py-32">
       <div className="shell">
@@ -102,38 +91,31 @@ export default function Visit() {
             </motion.div>
           </div>
 
-          {/* The map, in the shop's palette */}
-          <motion.div
+          {/* The map: a self-hosted still in the shop's palette. Clicking it
+              opens the live one; nothing external has to load for this to work. */}
+          <motion.a
+            href={shop.mapHref}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open Magic Cuts, 2779 Martin Rd, in Google Maps"
             initial={{ clipPath: 'inset(0 0 100% 0)' }}
             whileInView={{ clipPath: 'inset(0 0 0% 0)' }}
-            onViewportEnter={() => setMapLive(true)}
-            viewport={{ once: true, margin: '100px 0px' }}
+            viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="relative min-h-[420px] overflow-hidden rounded-[2px] border border-white/10 bg-onyx-900"
+            className="group relative block min-h-[420px] overflow-hidden rounded-[2px] border border-white/10 bg-onyx-900"
           >
-            {mapLive ? (
-              <iframe
-                title="Map to Magic Cuts, 2779 Martin Rd, Dublin OH"
-                src={MAP_SRC}
-                referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0 h-full w-full"
-                style={{ border: 0, filter: 'invert(0.89) hue-rotate(180deg) saturate(0.25) brightness(0.92) contrast(1.05)' }}
-              />
-            ) : (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                <p className="font-mono text-xs tracking-widest text-gold-300/50">40.1028° N · 83.1421° W</p>
-                <p className="font-mono text-xs text-bone/35">loading map…</p>
-              </div>
-            )}
-            <a
-              href={shop.mapHref}
-              target="_blank"
-              rel="noreferrer"
-              className="absolute bottom-4 left-4 bg-onyx-950/90 px-4 py-2.5 font-mono text-xs text-bone/80 transition-colors hover:text-gold-300"
-            >
+            <img
+              src="/map-dark.jpg"
+              alt="Map showing Magic Cuts at 2779 Martin Rd, Dublin, Ohio"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+            <span className="absolute bottom-4 left-4 bg-onyx-950/90 px-4 py-2.5 font-mono text-xs text-bone/80 transition-colors group-hover:text-gold-300">
               Open in Google Maps →
-            </a>
-          </motion.div>
+            </span>
+            <span className="absolute bottom-1.5 right-2 font-mono text-[9px] text-bone/25">
+              © OpenStreetMap © CARTO
+            </span>
+          </motion.a>
         </div>
 
         {/* FAQ */}

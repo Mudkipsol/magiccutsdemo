@@ -50,13 +50,16 @@ export default function BookingPage() {
       <header className="border-b border-white/10">
         <div className="shell flex h-16 items-center justify-between">
           <Link to="/" className="font-mono text-sm text-bone/60 transition-colors hover:text-bone">
-            ← Back to site
+            ← Back<span className="hidden sm:inline"> to site</span>
           </Link>
           <span className="flex items-center gap-3">
-            <img src="/logo-mark.png" alt="" className="h-8 w-auto -translate-y-[2px]" />
-            <span className="font-display text-xl font-bold uppercase leading-none text-bone translate-y-[1px]">Magic Cuts</span>
+            <img src="/logo-mark.png" alt="Magic Cuts" className="h-8 w-auto -translate-y-[2px]" />
+            <span className="hidden font-display text-xl font-bold uppercase leading-none text-bone translate-y-[1px] sm:inline">Magic Cuts</span>
           </span>
-          <span className="font-mono text-xs text-bone/40">Step {step} of 6</span>
+          <span className="font-mono text-xs tabular-nums text-bone/40">
+            <span className="hidden sm:inline">Step {step} of 6</span>
+            <span className="sm:hidden">{step} / 6</span>
+          </span>
         </div>
       </header>
 
